@@ -13,6 +13,9 @@ import {
   GitCommit,
   Calendar,
   User as UserIcon,
+  UserPlus,
+  Check,
+  Loader2,
   Hash,
   MessageSquare,
   ThumbsUp,
@@ -22,9 +25,11 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNumber, languageColor, timeAgo } from "@/lib/github";
 import { cn } from "@/lib/utils";
+import { useSelectionActions } from "./use-selection";
 
 /* ----------------------------- Repository card ---------------------------- */
 export function RepoCard({ item }: { item: any }) {
@@ -162,35 +167,73 @@ function Stat({ icon, value }: { icon: React.ReactNode; value: number }) {
 
 /* -------------------------------- User card ------------------------------- */
 export function UserCard({ item }: { item: any }) {
+  const { addToSelection, removeFromSelection, hasCandidate, loadingLogin } =
+    useSelectionActions();
+  const login = item.login;
+  const selected = hasCandidate(login);
+  const loading = loadingLogin === login;
+
   return (
     <Card className="group p-4 transition-all hover:shadow-md hover:border-primary/40">
       <div className="flex items-start gap-3">
-        <Avatar className="h-12 w-12 rounded-lg border">
+        <Avatar className="h-12 w-12 rounded-lg border shrink-0">
           <AvatarImage src={item.avatar_url} alt={item.login} />
           <AvatarFallback className="rounded-lg">
             {item.login?.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <Link
-              href={item.html_url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold hover:text-primary truncate"
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Link
+                href={item.html_url}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold hover:text-primary truncate"
+              >
+                {item.login}
+              </Link>
+              {item.type && (
+                <Badge variant="outline" className="text-[10px] py-0 shrink-0">
+                  {item.type}
+                </Badge>
+              )}
+              {item.site_admin && (
+                <Badge variant="destructive" className="text-[10px] py-0 shrink-0">
+                  Staff
+                </Badge>
+              )}
+              {selected && (
+                <Badge className="text-[10px] py-0 shrink-0 gap-1 bg-emerald-600 hover:bg-emerald-600">
+                  <Check className="h-2.5 w-2.5" />
+                  В выборке
+                </Badge>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant={selected ? "secondary" : "outline"}
+              className="h-7 shrink-0 gap-1 text-xs"
+              disabled={loading}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (selected) removeFromSelection(login);
+                else addToSelection(item);
+              }}
+              title={selected ? "Убрать из выборки" : "Добавить в выборку для ХАНТ"}
             >
-              {item.login}
-            </Link>
-            {item.type && (
-              <Badge variant="outline" className="text-[10px] py-0">
-                {item.type}
-              </Badge>
-            )}
-            {item.site_admin && (
-              <Badge variant="destructive" className="text-[10px] py-0">
-                Staff
-              </Badge>
-            )}
+              {loading ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : selected ? (
+                <Check className="h-3 w-3" />
+              ) : (
+                <UserPlus className="h-3 w-3" />
+              )}
+              <span className="hidden sm:inline">
+                {selected ? "В выборке" : "В выборку"}
+              </span>
+            </Button>
           </div>
           {item.name && (
             <p className="text-sm text-muted-foreground truncate">{item.name}</p>

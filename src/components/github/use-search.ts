@@ -76,19 +76,23 @@ export function useGitHubSearch({ enabled }: UseSearchArgs) {
 
   const runSearch = React.useCallback(
     (overrides?: { page?: number }) => {
-      const q = query.trim();
+      // Read fresh state directly from the store to avoid stale-closure issues
+      // when runSearch is called immediately after setQuery/setType in the
+      // same tick (e.g. clicking a suggestion chip).
+      const s = useSearchStore.getState();
+      const q = s.query.trim();
       if (!q) return;
       const next = {
         query: q,
-        type,
-        filters: { ...filters },
+        type: s.type,
+        filters: { ...s.filters },
         page: overrides?.page ?? 1,
-        perPage,
+        perPage: s.perPage,
       };
       setActive(next);
       setTrigger((t) => t + 1);
     },
-    [query, type, filters, perPage]
+    []
   );
 
   React.useEffect(() => {

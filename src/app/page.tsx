@@ -14,6 +14,7 @@ import {
   Zap,
   ShieldCheck,
   Code2,
+  ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,11 @@ import { ResultsList, SearchResult } from "@/components/github/results-list";
 import { Hero } from "@/components/github/hero";
 import { HistorySavedPanel } from "@/components/github/history-panel";
 import { SettingsDialog } from "@/components/github/settings-dialog";
+import {
+  SelectionPanel,
+  SelectionFab,
+} from "@/components/github/selection-panel";
+import { useSelectionStore } from "@/components/github/selection-store";
 import { useSearchStore } from "@/components/github/store";
 import { useGitHubSearch } from "@/components/github/use-search";
 import { SearchType } from "@/lib/github";
@@ -37,6 +43,8 @@ export default function Home() {
     useSearchStore();
   const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
   const [mobileSideOpen, setMobileSideOpen] = React.useState(false);
+  const [selectionOpen, setSelectionOpen] = React.useState(false);
+  const selectionCount = useSelectionStore((s) => s.candidates.length);
 
   const { result, loading, error, active, runSearch, changePage, retry } =
     useGitHubSearch({ enabled: true });
@@ -103,7 +111,22 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="sm"
-                className="hidden md:inline-flex h-9"
+                className="relative h-9 gap-1.5"
+                onClick={() => setSelectionOpen(true)}
+                title="Открыть выборку кандидатов для ХАНТ"
+              >
+                <ClipboardList className="h-3.5 w-3.5" />
+                <span className="hidden md:inline">Выборка</span>
+                {selectionCount > 0 && (
+                  <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold px-1">
+                    {selectionCount}
+                  </span>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden lg:inline-flex h-9"
                 onClick={() => {
                   if (!query) {
                     toast.warning("Введите запрос для сохранения");
@@ -224,6 +247,10 @@ export default function Home() {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* ----------------------- Selection panel (ХАНТ) ------------------- */}
+      <SelectionPanel open={selectionOpen} onOpenChange={setSelectionOpen} />
+      <SelectionFab count={selectionCount} onClick={() => setSelectionOpen(true)} />
 
       {/* ----------------------- Mobile history sheet --------------------- */}
       <Sheet open={mobileSideOpen} onOpenChange={setMobileSideOpen}>
