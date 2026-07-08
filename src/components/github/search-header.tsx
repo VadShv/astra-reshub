@@ -4,13 +4,11 @@ import * as React from "react";
 import {
   Search,
   SlidersHorizontal,
-  Github,
   Sparkles,
   Loader2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { SearchType } from "@/lib/github";
 import { useSearchStore } from "./store";
@@ -68,7 +66,13 @@ function TagIcon() {
   );
 }
 
-export function SearchHeader({
+export { TYPE_TABS };
+
+/**
+ * The search input + submit button row. Designed to live on the top row of a
+ * two-row header so it never collides with the type tabs below it.
+ */
+export function SearchInput({
   onSearch,
   loading,
   onOpenMobileFilters,
@@ -79,10 +83,9 @@ export function SearchHeader({
   onOpenMobileFilters?: () => void;
   activeCount?: number;
 }) {
-  const { query, setQuery, type, setType } = useSearchStore();
+  const { query, setQuery } = useSearchStore();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  // keyboard shortcut "/" focuses search
   React.useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -100,72 +103,97 @@ export function SearchHeader({
   };
 
   return (
-    <div className="w-full">
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <div className="relative flex-1 group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          <Input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Поиск по GitHub...  (напр., react dashboard, language:rust, user:torvalds)"
-            className="pl-9 pr-20 h-11 text-sm shadow-sm"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-0.5 text-[10px] text-muted-foreground border rounded px-1.5 py-0.5 bg-muted/50">
-            /
-          </kbd>
-        </div>
-        <Button type="submit" size="default" className="h-11 px-5 gap-2" disabled={loading}>
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Sparkles className="h-4 w-4" />
-          )}
-          <span className="hidden sm:inline">Найти</span>
-        </Button>
-        {onOpenMobileFilters && (
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 lg:hidden relative"
-            onClick={onOpenMobileFilters}
-            aria-label="Фильтры"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            {activeCount ? (
-              <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
-                {activeCount}
-              </span>
-            ) : null}
-          </Button>
-        )}
-      </form>
-
-      {/* Type tabs */}
-      <div className="mt-3 flex items-center gap-1 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
-        {TYPE_TABS.map((t) => (
-          <button
-            key={t.value}
-            type="button"
-            onClick={() => setType(t.value)}
-            className={cn(
-              "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-colors border",
-              type === t.value
-                ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
-            )}
-          >
-            {t.icon}
-            {t.label}
-          </button>
-        ))}
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 w-full">
+      <div className="relative flex-1 group">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Поиск по GitHub...  (react dashboard, language:rust, user:torvalds)"
+          className="pl-10 pr-16 h-11 text-sm bg-background/60 border-border/60 shadow-none focus-visible:bg-background transition-colors rounded-full"
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <kbd className="hidden sm:flex absolute right-3.5 top-1/2 -translate-y-1/2 items-center gap-0.5 text-[10px] text-muted-foreground border rounded px-1.5 py-0.5 bg-muted/40">
+          /
+        </kbd>
       </div>
+      <Button
+        type="submit"
+        className="h-11 px-5 gap-2 rounded-full shadow-sm shrink-0"
+        disabled={loading}
+      >
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Sparkles className="h-4 w-4" />
+        )}
+        <span className="hidden sm:inline">Найти</span>
+      </Button>
+      {onOpenMobileFilters && (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="h-11 w-11 lg:hidden relative rounded-full shrink-0"
+          onClick={onOpenMobileFilters}
+          aria-label="Фильтры"
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          {activeCount ? (
+            <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center">
+              {activeCount}
+            </span>
+          ) : null}
+        </Button>
+      )}
+    </form>
+  );
+}
+
+/**
+ * Horizontal, scrollable type tabs. Placed on the second row of the header so
+ * it has room to breathe and never overlaps the search input above it.
+ */
+export function TypeTabs() {
+  const { type, setType } = useSearchStore();
+  return (
+    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none -mx-1 px-1">
+      {TYPE_TABS.map((t) => (
+        <button
+          key={t.value}
+          type="button"
+          onClick={() => setType(t.value)}
+          className={cn(
+            "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all border",
+            type === t.value
+              ? "bg-foreground text-background border-foreground shadow-sm"
+              : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground"
+          )}
+        >
+          {t.icon}
+          {t.label}
+        </button>
+      ))}
     </div>
   );
 }
 
-export { TYPE_TABS };
+/** Legacy compat — not used in the two-row header anymore. */
+export function SearchHeader(props: {
+  onSearch: () => void;
+  loading: boolean;
+  onOpenMobileFilters?: () => void;
+  activeCount?: number;
+}) {
+  return (
+    <div className="w-full">
+      <SearchInput {...props} />
+      <div className="mt-2.5">
+        <TypeTabs />
+      </div>
+    </div>
+  );
+}

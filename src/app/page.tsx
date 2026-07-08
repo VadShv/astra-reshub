@@ -10,10 +10,8 @@ import {
   X,
   Bookmark,
   History,
-  Star,
   Zap,
   ShieldCheck,
-  Code2,
   ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -23,7 +21,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SearchHeader } from "@/components/github/search-header";
+import { SearchInput, TypeTabs } from "@/components/github/search-header";
 import { FilterPanel } from "@/components/github/filter-panel";
 import { ResultsList, SearchResult } from "@/components/github/results-list";
 import { Hero } from "@/components/github/hero";
@@ -33,31 +31,31 @@ import {
   SelectionPanel,
   SelectionFab,
 } from "@/components/github/selection-panel";
+import { ProfileDashboard } from "@/components/github/profile-dashboard";
+import { useUIStore } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
 import { useSearchStore } from "@/components/github/store";
 import { useGitHubSearch } from "@/components/github/use-search";
 import { SearchType } from "@/lib/github";
 
 export default function Home() {
-  const { type, filters, perPage, setPerPage, resetFilters, saveSearch, query } =
+  const { type, filters, perPage, setPerPage, saveSearch, query } =
     useSearchStore();
   const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
   const [mobileSideOpen, setMobileSideOpen] = React.useState(false);
   const [selectionOpen, setSelectionOpen] = React.useState(false);
   const selectionCount = useSelectionStore((s) => s.candidates.length);
+  const dashboardLogin = useUIStore((s) => s.dashboardLogin);
+  const closeDashboard = useUIStore((s) => s.closeDashboard);
 
   const { result, loading, error, active, runSearch, changePage, retry } =
     useGitHubSearch({ enabled: true });
 
   const hasSearched = active !== null;
 
-  const handleSearch = React.useCallback(
-    (q?: string, t?: SearchType) => {
-      // q/t come from hero picks; if provided, the store is already updated.
-      runSearch();
-    },
-    [runSearch]
-  );
+  const handleSearch = React.useCallback(() => {
+    runSearch();
+  }, [runSearch]);
 
   const rateLimit = result?.rateLimit;
 
@@ -78,15 +76,16 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* ----------------------------- Header ----------------------------- */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
+      {/* ----------------------------- Header (two rows) ------------------ */}
+      <header className="sticky top-0 z-40 w-full border-b bg-background/85 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65">
+        {/* Row 1: logo + search input + actions */}
         <div className="mx-auto max-w-7xl px-4">
-          <div className="flex items-center gap-3 h-14">
+          <div className="flex items-center gap-3 h-16">
             <Link href="/" className="flex items-center gap-2 shrink-0 group">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background group-hover:scale-105 transition-transform">
-                <Github className="h-4.5 w-4.5" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background group-hover:scale-105 transition-transform shadow-sm">
+                <Github className="h-5 w-5" />
               </div>
-              <div className="hidden sm:block leading-none">
+              <div className="hidden lg:block leading-none">
                 <span className="font-bold text-base tracking-tight">GitFind</span>
                 <span className="block text-[10px] text-muted-foreground mt-0.5">
                   advanced github search
@@ -95,8 +94,8 @@ export default function Home() {
             </Link>
 
             <div className="flex-1 max-w-2xl">
-              <SearchHeader
-                onSearch={() => handleSearch()}
+              <SearchInput
+                onSearch={handleSearch}
                 loading={loading}
                 onOpenMobileFilters={() => setMobileFiltersOpen(true)}
                 activeCount={activeFilterCount}
@@ -111,7 +110,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="sm"
-                className="relative h-9 gap-1.5"
+                className="relative h-9 gap-1.5 rounded-full"
                 onClick={() => setSelectionOpen(true)}
                 title="Открыть выборку кандидатов для ХАНТ"
               >
@@ -126,7 +125,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="sm"
-                className="hidden lg:inline-flex h-9"
+                className="hidden xl:inline-flex h-9 rounded-full"
                 onClick={() => {
                   if (!query) {
                     toast.warning("Введите запрос для сохранения");
@@ -143,6 +142,11 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Row 2: type tabs */}
+        <div className="mx-auto max-w-7xl px-4 pb-2.5">
+          <TypeTabs />
+        </div>
       </header>
 
       {/* ------------------------------ Main ------------------------------ */}
@@ -154,7 +158,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_260px] gap-5">
               {/* Filters sidebar (desktop) */}
               <aside className="hidden lg:block">
-                <div className="sticky top-[7.5rem] max-h-[calc(100vh-8.5rem)] rounded-xl border bg-card/50 p-3">
+                <div className="sticky top-36 max-h-[calc(100vh-10rem)] rounded-xl border bg-card/50 p-3 shadow-sm">
                   <FilterPanel />
                 </div>
               </aside>
@@ -183,7 +187,7 @@ export default function Home() {
 
               {/* History & saved (desktop xl) */}
               <aside className="hidden xl:block">
-                <div className="sticky top-[7.5rem] max-h-[calc(100vh-8.5rem)] rounded-xl border bg-card/50 p-3 overflow-hidden">
+                <div className="sticky top-36 max-h-[calc(100vh-10rem)] rounded-xl border bg-card/50 p-3 overflow-hidden shadow-sm">
                   <HistorySavedPanel onApply={() => runSearch()} />
                 </div>
               </aside>
@@ -252,6 +256,9 @@ export default function Home() {
       <SelectionPanel open={selectionOpen} onOpenChange={setSelectionOpen} />
       <SelectionFab count={selectionCount} onClick={() => setSelectionOpen(true)} />
 
+      {/* ----------------------- Profile dashboard ------------------------ */}
+      <ProfileDashboard login={dashboardLogin} onClose={closeDashboard} />
+
       {/* ----------------------- Mobile history sheet --------------------- */}
       <Sheet open={mobileSideOpen} onOpenChange={setMobileSideOpen}>
         <SheetContent side="right" className="w-[90%] sm:w-[380px] overflow-y-auto p-0">
@@ -282,7 +289,7 @@ function RateLimitBadge({ remaining, limit }: { remaining: number; limit: number
   return (
     <Badge
       variant="outline"
-      className="hidden md:inline-flex items-center gap-1.5 h-7 px-2 text-[11px] font-mono"
+      className="hidden md:inline-flex items-center gap-1.5 h-9 px-2.5 text-[11px] font-mono rounded-full"
       title={`Осталось запросов к GitHub API: ${remaining}/${limit}`}
     >
       <Gauge className={`h-3 w-3 ${color}`} />
@@ -331,7 +338,7 @@ function Toolbar({
         <Button
           variant="outline"
           size="sm"
-          className="xl:hidden h-8"
+          className="xl:hidden h-8 rounded-full"
           onClick={onOpenHistory}
         >
           <History className="h-3.5 w-3.5 mr-1.5" />
@@ -340,7 +347,7 @@ function Toolbar({
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <span>На странице:</span>
           <Select value={String(perPage)} onValueChange={(v) => onPerPageChange(Number(v))}>
-            <SelectTrigger className="h-8 w-[70px] text-xs">
+            <SelectTrigger className="h-8 w-[70px] text-xs rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

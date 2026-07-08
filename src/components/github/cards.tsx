@@ -22,6 +22,7 @@ import {
   ExternalLink,
   Tag,
   BookOpen,
+  BarChart3,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNumber, languageColor, timeAgo } from "@/lib/github";
 import { cn } from "@/lib/utils";
 import { useSelectionActions } from "./use-selection";
+import { useUIStore } from "./ui-store";
 
 /* ----------------------------- Repository card ---------------------------- */
 export function RepoCard({ item }: { item: any }) {
@@ -169,6 +171,7 @@ function Stat({ icon, value }: { icon: React.ReactNode; value: number }) {
 export function UserCard({ item }: { item: any }) {
   const { addToSelection, removeFromSelection, hasCandidate, loadingLogin } =
     useSelectionActions();
+  const openDashboard = useUIStore((s) => s.openDashboard);
   const login = item.login;
   const selected = hasCandidate(login);
   const loading = loadingLogin === login;
@@ -210,30 +213,42 @@ export function UserCard({ item }: { item: any }) {
                 </Badge>
               )}
             </div>
-            <Button
-              size="sm"
-              variant={selected ? "secondary" : "outline"}
-              className="h-7 shrink-0 gap-1 text-xs"
-              disabled={loading}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (selected) removeFromSelection(login);
-                else addToSelection(item);
-              }}
-              title={selected ? "Убрать из выборки" : "Добавить в выборку для ХАНТ"}
-            >
-              {loading ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : selected ? (
-                <Check className="h-3 w-3" />
-              ) : (
-                <UserPlus className="h-3 w-3" />
-              )}
-              <span className="hidden sm:inline">
-                {selected ? "В выборке" : "В выборку"}
-              </span>
-            </Button>
+            <div className="flex items-center gap-1 shrink-0">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 px-2 gap-1 text-xs hover:bg-primary/10 hover:text-primary"
+                onClick={() => openDashboard(login)}
+                title="Открыть дашборд профиля: языки, звёзды, активность"
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Анализ</span>
+              </Button>
+              <Button
+                size="sm"
+                variant={selected ? "secondary" : "outline"}
+                className="h-7 shrink-0 gap-1 text-xs"
+                disabled={loading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (selected) removeFromSelection(login);
+                  else addToSelection(item);
+                }}
+                title={selected ? "Убрать из выборки" : "Добавить в выборку для ХАНТ"}
+              >
+                {loading ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : selected ? (
+                  <Check className="h-3 w-3" />
+                ) : (
+                  <UserPlus className="h-3 w-3" />
+                )}
+                <span className="hidden sm:inline">
+                  {selected ? "В выборке" : "В выборку"}
+                </span>
+              </Button>
+            </div>
           </div>
           {item.name && (
             <p className="text-sm text-muted-foreground truncate">{item.name}</p>

@@ -20,13 +20,13 @@ const SUGGESTIONS: { query: string; type: SearchType; label: string }[] = [
   { query: "fix", type: "commits", label: "fix commits" },
 ];
 
-export function Hero({ onSearch }: { onSearch: (q: string, type: SearchType) => void }) {
+export function Hero({ onSearch }: { onSearch: () => void }) {
   const { setType, setQuery, applyEntry } = useSearchStore();
 
   const pick = (q: string, type: SearchType) => {
     setQuery(q);
     setType(type);
-    onSearch(q, type);
+    onSearch();
   };
 
   return (
@@ -79,9 +79,7 @@ export function Hero({ onSearch }: { onSearch: (q: string, type: SearchType) => 
       <div className="mt-10 text-left">
         <HistorySavedPanel
           onApply={() => {
-            // applyEntry already sets store state; trigger search via callback
-            const st = useSearchStore.getState();
-            onSearch(st.query, st.type);
+            onSearch();
           }}
         />
       </div>
