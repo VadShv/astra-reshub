@@ -83,7 +83,7 @@ export function SearchInput({
   onOpenMobileFilters?: () => void;
   activeCount?: number;
 }) {
-  const { query, setQuery } = useSearchStore();
+  const { query, setQuery, type } = useSearchStore();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
@@ -102,6 +102,16 @@ export function SearchInput({
     onSearch();
   };
 
+  // Friendly, context-aware placeholder so the search feels approachable.
+  const placeholders: Record<string, string> = {
+    repositories: "Например: react dashboard  ·  или language:rust stars:>1000",
+    users: "Например: python разработчик  ·  или location:Moscow language:go",
+    code: "Например: useEffect  ·  или useState in:file language:typescript",
+    issues: "Например: memory leak  ·  или is:open label:bug",
+    commits: "Например: fix parser  ·  или author:torvalds",
+    topics: "Например: machine-learning  ·  или react",
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2 w-full">
       <div className="relative flex-1 group">
@@ -111,7 +121,7 @@ export function SearchInput({
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск по GitHub...  (react dashboard, language:rust, user:torvalds)"
+          placeholder={placeholders[type] || "Поиск по GitHub..."}
           className="pl-10 pr-16 h-11 text-sm bg-background/60 border-border/60 shadow-none focus-visible:bg-background transition-colors rounded-full"
           autoComplete="off"
           spellCheck={false}

@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   FolderGit2,
   FileCode,
+  ChevronDown,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +28,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   getLicenses,
   getSortOptions,
@@ -248,160 +254,168 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
                 />
               </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<GitFork className="h-3.5 w-3.5" />}>
-                  Форки
-                </SectionTitle>
-                <RangeInput
-                  minKey="forksMin"
-                  maxKey="forksMax"
-                  placeholderMin="от"
-                  placeholderMax="до"
-                />
-              </div>
+              <Collapsible className="space-y-4">
+                <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors">
+                  <span>Дополнительно (форки, даты, лицензия...)</span>
+                  <ChevronDown className="h-3.5 w-3.5 [[data-state=open]_&]:rotate-180 transition-transform" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4">
+                  <div className="space-y-2">
+                    <SectionTitle icon={<GitFork className="h-3.5 w-3.5" />}>
+                      Форки
+                    </SectionTitle>
+                    <RangeInput
+                      minKey="forksMin"
+                      maxKey="forksMax"
+                      placeholderMin="от"
+                      placeholderMax="до"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<HardDrive className="h-3.5 w-3.5" />}>
-                  Размер (КБ)
-                </SectionTitle>
-                <RangeInput
-                  minKey="sizeMin"
-                  maxKey="sizeMax"
-                  placeholderMin="от"
-                  placeholderMax="до"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<HardDrive className="h-3.5 w-3.5" />}>
+                      Размер (КБ)
+                    </SectionTitle>
+                    <RangeInput
+                      minKey="sizeMin"
+                      maxKey="sizeMax"
+                      placeholderMin="от"
+                      placeholderMax="до"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Calendar className="h-3.5 w-3.5" />}>
-                  Создан
-                </SectionTitle>
-                <DateRange afterKey="createdAfter" beforeKey="createdBefore" />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Calendar className="h-3.5 w-3.5" />}>
+                      Создан
+                    </SectionTitle>
+                    <DateRange afterKey="createdAfter" beforeKey="createdBefore" />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Calendar className="h-3.5 w-3.5" />}>
-                  Обновлён (push)
-                </SectionTitle>
-                <DateRange afterKey="pushedAfter" beforeKey="pushedBefore" />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Calendar className="h-3.5 w-3.5" />}>
+                      Обновлён (push)
+                    </SectionTitle>
+                    <DateRange afterKey="pushedAfter" beforeKey="pushedBefore" />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Scale className="h-3.5 w-3.5" />}>
-                  Лицензия
-                </SectionTitle>
-                <Select
-                  value={(filters.license as string) || "__any"}
-                  onValueChange={(v) =>
-                    handleChange("license" as any, v === "__any" ? undefined : v)
-                  }
-                >
-                  <SelectTrigger className="h-8 text-sm">
-                    <SelectValue placeholder="Любая" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__any">Любая</SelectItem>
-                    {getLicenses().map((l) => (
-                      <SelectItem key={l.key} value={l.key}>
-                        {l.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Scale className="h-3.5 w-3.5" />}>
+                      Лицензия
+                    </SectionTitle>
+                    <Select
+                      value={(filters.license as string) || "__any"}
+                      onValueChange={(v) =>
+                        handleChange("license" as any, v === "__any" ? undefined : v)
+                      }
+                    >
+                      <SelectTrigger className="h-8 text-sm">
+                        <SelectValue placeholder="Любая" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__any">Любая</SelectItem>
+                        {getLicenses().map((l) => (
+                          <SelectItem key={l.key} value={l.key}>
+                            {l.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Tag className="h-3.5 w-3.5" />}>
-                  Темы (через пробел)
-                </SectionTitle>
-                <Input
-                  placeholder="react ui dashboard"
-                  value={(filters.topics as string) || ""}
-                  onChange={(e) => handleChange("topics" as any, e.target.value || undefined)}
-                  className="h-8 text-sm"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Tag className="h-3.5 w-3.5" />}>
+                      Темы (через пробел)
+                    </SectionTitle>
+                    <Input
+                      placeholder="react ui dashboard"
+                      value={(filters.topics as string) || ""}
+                      onChange={(e) => handleChange("topics" as any, e.target.value || undefined)}
+                      className="h-8 text-sm"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Users className="h-3.5 w-3.5" />}>
-                  Владелец (user)
-                </SectionTitle>
-                <Input
-                  placeholder="например, facebook"
-                  value={(filters.repoUser as string) || ""}
-                  onChange={(e) => handleChange("repoUser" as any, e.target.value || undefined)}
-                  className="h-8 text-sm"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Users className="h-3.5 w-3.5" />}>
+                      Владелец (user)
+                    </SectionTitle>
+                    <Input
+                      placeholder="например, facebook"
+                      value={(filters.repoUser as string) || ""}
+                      onChange={(e) => handleChange("repoUser" as any, e.target.value || undefined)}
+                      className="h-8 text-sm"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <SectionTitle icon={<Building2 className="h-3.5 w-3.5" />}>
-                  Организация
-                </SectionTitle>
-                <Input
-                  placeholder="например, vercel"
-                  value={(filters.org as string) || ""}
-                  onChange={(e) => handleChange("org" as any, e.target.value || undefined)}
-                  className="h-8 text-sm"
-                />
-              </div>
+                  <div className="space-y-2">
+                    <SectionTitle icon={<Building2 className="h-3.5 w-3.5" />}>
+                      Организация
+                    </SectionTitle>
+                    <Input
+                      placeholder="например, vercel"
+                      value={(filters.org as string) || ""}
+                      onChange={(e) => handleChange("org" as any, e.target.value || undefined)}
+                      className="h-8 text-sm"
+                    />
+                  </div>
 
-              <div className="space-y-3">
-                <SectionTitle icon={<CheckCircle2 className="h-3.5 w-3.5" />}>
-                  Состояние
-                </SectionTitle>
-                <div className="space-y-2.5">
-                  <SelectRow
-                    label="Форки"
-                    icon={<GitBranch className="h-3.5 w-3.5" />}
-                    value={(filters.isFork as string) || "__any"}
-                    onChange={(v) =>
-                      handleChange("isFork" as any, v === "__any" ? undefined : v)
-                    }
-                    options={[
-                      { value: "__any", label: "Все" },
-                      { value: "false", label: "Без форков" },
-                      { value: "true", label: "Вкл. форки" },
-                      { value: "only", label: "Только форки" },
-                    ]}
-                  />
-                  <SelectRow
-                    label="Архив"
-                    icon={<FolderGit2 className="h-3.5 w-3.5" />}
-                    value={(filters.isArchived as string) || "__any"}
-                    onChange={(v) =>
-                      handleChange("isArchived" as any, v === "__any" ? undefined : v)
-                    }
-                    options={[
-                      { value: "__any", label: "Все" },
-                      { value: "false", label: "Не архив" },
-                      { value: "true", label: "Архивные" },
-                    ]}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <ToggleRow
-                    label="Есть issues"
-                    checked={!!filters.hasIssues}
-                    onChange={(v) => handleChange("hasIssues" as any, v || undefined)}
-                  />
-                  <ToggleRow
-                    label="Есть темы"
-                    checked={!!filters.hasTopics}
-                    onChange={(v) => handleChange("hasTopics" as any, v || undefined)}
-                  />
-                  <ToggleRow
-                    label="Есть wiki"
-                    checked={!!filters.hasWiki}
-                    onChange={(v) => handleChange("hasWiki" as any, v || undefined)}
-                  />
-                  <ToggleRow
-                    label="Есть открытые issues"
-                    checked={!!filters.hasOpenIssues}
-                    onChange={(v) => handleChange("hasOpenIssues" as any, v || undefined)}
-                  />
-                </div>
-              </div>
+                  <div className="space-y-3">
+                    <SectionTitle icon={<CheckCircle2 className="h-3.5 w-3.5" />}>
+                      Состояние
+                    </SectionTitle>
+                    <div className="space-y-2.5">
+                      <SelectRow
+                        label="Форки"
+                        icon={<GitBranch className="h-3.5 w-3.5" />}
+                        value={(filters.isFork as string) || "__any"}
+                        onChange={(v) =>
+                          handleChange("isFork" as any, v === "__any" ? undefined : v)
+                        }
+                        options={[
+                          { value: "__any", label: "Все" },
+                          { value: "false", label: "Без форков" },
+                          { value: "true", label: "Вкл. форки" },
+                          { value: "only", label: "Только форки" },
+                        ]}
+                      />
+                      <SelectRow
+                        label="Архив"
+                        icon={<FolderGit2 className="h-3.5 w-3.5" />}
+                        value={(filters.isArchived as string) || "__any"}
+                        onChange={(v) =>
+                          handleChange("isArchived" as any, v === "__any" ? undefined : v)
+                        }
+                        options={[
+                          { value: "__any", label: "Все" },
+                          { value: "false", label: "Не архив" },
+                          { value: "true", label: "Архивные" },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <ToggleRow
+                        label="Есть issues"
+                        checked={!!filters.hasIssues}
+                        onChange={(v) => handleChange("hasIssues" as any, v || undefined)}
+                      />
+                      <ToggleRow
+                        label="Есть темы"
+                        checked={!!filters.hasTopics}
+                        onChange={(v) => handleChange("hasTopics" as any, v || undefined)}
+                      />
+                      <ToggleRow
+                        label="Есть wiki"
+                        checked={!!filters.hasWiki}
+                        onChange={(v) => handleChange("hasWiki" as any, v || undefined)}
+                      />
+                      <ToggleRow
+                        label="Есть открытые issues"
+                        checked={!!filters.hasOpenIssues}
+                        onChange={(v) => handleChange("hasOpenIssues" as any, v || undefined)}
+                      />
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </>
           )}
 

@@ -218,7 +218,7 @@ export function UserCard({ item }: { item: any }) {
                 size="sm"
                 variant="ghost"
                 className="h-7 px-2 gap-1 text-xs hover:bg-primary/10 hover:text-primary"
-                onClick={() => openDashboard(login)}
+                onClick={() => openDashboard(login, item)}
                 title="Открыть дашборд профиля: языки, звёзды, активность"
               >
                 <BarChart3 className="h-3.5 w-3.5" />

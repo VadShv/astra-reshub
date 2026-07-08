@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+// In-memory cache so repeat dashboard opens don't re-hit GitHub.
+interface CacheEntry {
+  data: any;
+  ts: number;
+}
+const cache = new Map<string, CacheEntry>();
+const CACHE_TTL = 10 * 60 * 1000;
+
 // Fetch a user's public repositories (for profile analytics: languages,
 // stars, forks, activity over time). Paginated up to 100 per request; we fetch
 // up to 4 pages (400 repos) which is enough for a meaningful dashboard while
@@ -11,6 +19,12 @@ export async function GET(req: NextRequest) {
   const login = searchParams.get("login");
   if (!login) {
     return NextResponse.json({ error: "Параметр login обязателен." }, { status: 400 });
+  }
+
+  // Serve from cache if fresh.
+  const cached = cache.get(login);
+  if (cached && Date.now() - cached.ts < CACHE_TTL) {
+    return NextResponse.json(cached.data);
   }
 
   const headers: Record<string, string> = {
@@ -87,11 +101,13 @@ export async function GET(req: NextRequest) {
       limit: parseInt(res.headers.get("x-ratelimit-limit") || "0", 10),
     };
 
-    return NextResponse.json({
+    const payload = {
       repos: slim,
       count: slim.length,
       rateLimit,
-    });
+    };
+    cache.set(login, { data: payload, ts: Date.now() });
+    return NextResponse.json(payload);
   } catch (e: any) {
     return NextResponse.json(
       { error: "Не удалось связаться с GitHub.", detail: e?.message },

@@ -49,9 +49,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSearchStore } from "./store";
+import { useUIStore } from "./ui-store";
 import { formatNumber, languageColor } from "@/lib/github";
 import {
   analyzeProfile,
@@ -82,30 +82,57 @@ interface ProfileData {
   public_gists?: number;
   created_at?: string;
   updated_at?: string;
+  type?: string;
 }
 
 export function ProfileDashboard({ login, onClose }: ProfileDashboardProps) {
   const open = !!login;
   const githubToken = useSearchStore((s) => s.githubToken);
+  const initialItem = useUIStore((s) => s.dashboardInitial);
   const [profile, setProfile] = React.useState<ProfileData | null>(null);
   const [repos, setRepos] = React.useState<RepoLite[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [reposWarning, setReposWarning] = React.useState<string | null>(null);
+  const [warning, setWarning] = React.useState<string | null>(null);
+
+  // Build a baseline profile from the search item so the dashboard renders
+  // INSTANTLY — even before (or instead of) the enrichment API call.
+  const baselineProfile = React.useMemo<ProfileData | null>(() => {
+    if (!login) return null;
+    const it = initialItem || {};
+    return {
+      login,
+      name: it.name || null,
+      avatar_url: it.avatar_url || "",
+      html_url: it.html_url || `https://github.com/${login}`,
+      bio: it.bio || null,
+      company: it.company || null,
+      blog: it.blog || null,
+      location: it.location || null,
+      email: it.email || null,
+      twitter_username: it.twitter_username || null,
+      followers: it.followers,
+      following: it.following,
+      public_repos: it.public_repos,
+      public_gists: it.public_gists,
+      created_at: it.created_at,
+      updated_at: it.updated_at,
+      type: it.type,
+    };
+  }, [login, initialItem]);
 
   React.useEffect(() => {
     if (!login) {
       setProfile(null);
       setRepos([]);
-      setError(null);
+      setWarning(null);
       return;
     }
     let cancelled = false;
     setLoading(true);
-    setError(null);
-    setProfile(null);
+    setWarning(null);
+    // Show baseline immediately so the user sees content, not a blank spinner.
+    setProfile(baselineProfile);
     setRepos([]);
-    setReposWarning(null);
 
     const headers: Record<string, string> = {};
     if (githubToken) headers["x-github-token"] = githubToken;
@@ -117,30 +144,44 @@ export function ProfileDashboard({ login, onClose }: ProfileDashboardProps) {
           fetch(`/api/github/repos?login=${encodeURIComponent(login)}`, { headers }),
         ]);
         if (cancelled) return;
-        if (!pRes.ok) {
-          const d = await pRes.json().catch(() => ({}));
-          throw new Error(d?.error || `Ошибка профиля (${pRes.status})`);
-        }
-        const pData = await pRes.json();
-        let reposData: RepoLite[] = [];
-        if (rRes.ok) {
-          const rData = await rRes.json();
-          reposData = rData.repos || [];
+
+        // Profile: enrich if OK, otherwise keep baseline + friendly warning.
+        let profileData = baselineProfile;
+        if (pRes.ok) {
+          profileData = await pRes.json();
         } else {
-          const rErr = await rRes.json().catch(() => ({}));
-          if (rErr?.rateLimited) {
-            setReposWarning(
-              "Лимит GitHub исчерпан — репозитории загрузятся при повторном открытии. Базовая аналитика по профилю доступна."
+          const pErr = await pRes.json().catch(() => ({}));
+          if (pErr?.rateLimited) {
+            setWarning(
+              pErr.error ||
+                "Лимит GitHub исчерпан. Базовые данные показаны — добавьте токен для полной аналитики."
             );
-          } else {
-            setReposWarning("Не удалось загрузить список репозиториев.");
+          } else if (pRes.status !== 404) {
+            setWarning("Профиль загрузится позже. Показаны базовые данные из поиска.");
           }
         }
         if (cancelled) return;
-        setProfile(pData);
-        setRepos(reposData);
+        setProfile(profileData);
+
+        // Repos: load if OK, else warn but keep dashboard usable.
+        if (rRes.ok) {
+          const rData = await rRes.json();
+          setRepos(rData.repos || []);
+        } else {
+          const rErr = await rRes.json().catch(() => ({}));
+          if (rErr?.rateLimited && !warning) {
+            setWarning(
+              "Лимит GitHub исчерпан — графики языков и активность загрузятся при повторном открытии. Профиль и KPI доступны."
+            );
+          } else if (!warning) {
+            setWarning("Не удалось загрузить репозитории. Профиль и базовые KPI доступны.");
+          }
+        }
       } catch (e: any) {
-        if (!cancelled) setError(e?.message || "Не удалось загрузить профиль");
+        if (!cancelled) {
+          // Network error — but we still keep the baseline profile visible.
+          setWarning("Сетевая ошибка. Показаны базовые данные из поиска.");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -149,7 +190,7 @@ export function ProfileDashboard({ login, onClose }: ProfileDashboardProps) {
     return () => {
       cancelled = true;
     };
-  }, [login, githubToken]);
+  }, [login, githubToken, baselineProfile]);
 
   const analytics = React.useMemo(
     () => (profile ? analyzeProfile(repos, profile) : null),
@@ -171,21 +212,14 @@ export function ProfileDashboard({ login, onClose }: ProfileDashboardProps) {
 
         <ScrollArea className="flex-1">
           <div className="p-5">
-            {loading ? (
+            {loading && !profile ? (
               <DashboardSkeleton />
-            ) : error ? (
-              <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-                <AlertCircle className="h-10 w-10 text-rose-500" />
-                <p className="text-sm text-muted-foreground max-w-md">{error}</p>
-                <Button variant="outline" size="sm" onClick={onClose}>
-                  Закрыть
-                </Button>
-              </div>
             ) : profile && analytics ? (
               <DashboardBody
                 profile={profile}
                 analytics={analytics}
-                reposWarning={reposWarning}
+                warning={warning}
+                loading={loading}
               />
             ) : null}
           </div>
@@ -198,18 +232,26 @@ export function ProfileDashboard({ login, onClose }: ProfileDashboardProps) {
 function DashboardBody({
   profile,
   analytics,
-  reposWarning,
+  warning,
+  loading,
 }: {
   profile: ProfileData;
   analytics: ProfileAnalytics;
-  reposWarning?: string | null;
+  warning?: string | null;
+  loading?: boolean;
 }) {
   return (
     <div className="space-y-5">
-      {reposWarning && (
+      {warning && (
         <div className="flex items-start gap-2.5 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-700 dark:text-amber-400">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-          <span>{reposWarning}</span>
+          <span>{warning}</span>
+        </div>
+      )}
+      {loading && (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+          Загружаем полные данные профиля и репозитории…
         </div>
       )}
       {/* Profile header */}
