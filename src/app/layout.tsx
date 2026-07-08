@@ -16,16 +16,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GitFind — Продвинутый поиск по GitHub",
+  title: "GitFind — Поиск системных разработчиков по GitHub",
   description:
-    "Мощная и удобная поисковая система по GitHub: репозитории, пользователи, код, issues, коммиты и темы с расширенными фильтрами.",
+    "Поиск системных разработчиков (C, C++, Go, Python, Rust) в Москве и России: СУБД, Linux, СХД, СРК, ядро и сетевое ПО. Экспорт выборки в формат ХАНТ.",
   keywords: [
     "GitHub",
-    "поиск",
-    "репозитории",
-    "open source",
-    "code search",
-    "developers",
+    "системные разработчики",
+    "C",
+    "C++",
+    "Go",
+    "Python",
+    "Rust",
+    "СУБД",
+    "Linux",
+    "СХД",
+    "СРК",
+    "Москва",
+    "Россия",
+    "рекрутинг",
   ],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",

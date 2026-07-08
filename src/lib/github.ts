@@ -71,23 +71,29 @@ const LICENSES: { key: string; name: string }[] = [
   { key: "agpl-3.0", name: "GNU Affero General Public License v3.0" },
 ];
 
+// Languages ordered for a systems-software focus (C/C++/Go/Python/Rust first),
+// followed by general-purpose languages.
 export const POPULAR_LANGUAGES: string[] = [
+  // Systems core
+  "C",
+  "C++",
+  "Go",
+  "Python",
+  "Rust",
+  "Shell",
+  "Assembly",
+  "Cuda",
+  // General purpose
+  "Java",
+  "C#",
   "JavaScript",
   "TypeScript",
-  "Python",
-  "Java",
-  "Go",
-  "Rust",
-  "C++",
-  "C",
-  "C#",
   "Ruby",
   "PHP",
   "Swift",
   "Kotlin",
   "Dart",
   "Scala",
-  "Shell",
   "HTML",
   "CSS",
   "Vue",
@@ -101,11 +107,119 @@ export const POPULAR_LANGUAGES: string[] = [
   "OCaml",
   "Solidity",
   "Julia",
+  "Objective-C",
+  "Clojure",
+  "Erlang",
+  "F#",
+  "Groovy",
+  "PowerShell",
+  "Vim Script",
+  "Makefile",
+  "CMake",
+  "Dockerfile",
 ];
 
 export function getLicenses() {
   return LICENSES;
 }
+
+// ---------------------------------------------------------------------------
+// Domain presets tailored for sourcing systems-software engineers in Russia.
+// Each preset builds a ready-to-run GitHub search query string.
+// ---------------------------------------------------------------------------
+export interface DomainPreset {
+  id: string;
+  label: string;
+  description: string;
+  language?: string;
+  topics?: string[];
+  query?: string; // raw qualifiers appended to the query
+}
+
+// Systems-software domains: databases, OS/Linux, storage, kernel, crypto, etc.
+export const SYSTEMS_DOMAINS: DomainPreset[] = [
+  {
+    id: "databases",
+    label: "СУБД",
+    description: "PostgreSQL, MySQL, ClickHouse, Redis, SQLite",
+    topics: ["database", "sql", "postgresql", "mysql", "redis", "clickhouse"],
+  },
+  {
+    id: "linux-os",
+    label: "Linux / ОС",
+    description: "Ядро, системные утилиты, дистрибутивы",
+    topics: ["linux", "kernel", "operating-system", "systemd", "unix"],
+  },
+  {
+    id: "storage",
+    label: "СХД",
+    description: "Системы хранения данных, файловые системы",
+    topics: ["storage", "filesystem", "distributed-storage", "ceph", "nfs"],
+  },
+  {
+    id: "srk",
+    label: "СРК",
+    description: "Системы распределённых вычислений, очереди",
+    topics: ["kafka", "rabbitmq", "message-queue", "distributed-computing"],
+  },
+  {
+    id: "networking",
+    label: "Сеть / Net",
+    description: "Сетевые протоколы, TCP/IP, прокси, балансировщики",
+    topics: ["networking", "tcp", "proxy", "load-balancer", "nginx", "haproxy"],
+  },
+  {
+    id: "kernel",
+    label: "Ядро / Drivers",
+    description: "Kernel modules, drivers, eBPF",
+    topics: ["kernel", "driver", "ebpf", "linux-kernel"],
+  },
+  {
+    id: "crypto",
+    label: "Крипто / Безопасность",
+    description: "TLS, шифрование, безопасность",
+    topics: ["cryptography", "security", "tls", "openssl"],
+  },
+  {
+    id: "containers",
+    label: "Контейнеры / VM",
+    description: "Docker, K8s, виртуализация",
+    topics: ["docker", "kubernetes", "container", "virtualization", "vm"],
+  },
+  {
+    id: "hpc",
+    label: "HPC / CUDA",
+    description: "Высокопроизводительные вычисления, GPU",
+    language: "Cuda",
+    topics: ["hpc", "gpu", "cuda", "parallel-computing"],
+  },
+];
+
+// Russian cities / regions for the location filter.
+export const RUSSIA_LOCATIONS: string[] = [
+  "Moscow",
+  "Saint Petersburg",
+  "Novosibirsk",
+  "Yekaterinburg",
+  "Kazan",
+  "Nizhny Novgorod",
+  "Chelyabinsk",
+  "Samara",
+  "Omsk",
+  "Rostov-on-Don",
+  "Ufa",
+  "Krasnoyarsk",
+  "Voronezh",
+  "Perm",
+  "Volgograd",
+  "Innopolis",
+  "Russia",
+  "Belarus",
+  "Kazakhstan",
+  "Armenia",
+  "Georgia",
+  "Uzbekistan",
+];
 
 export function getSortOptions(type: SearchType): { value: string; label: string }[] {
   switch (type) {

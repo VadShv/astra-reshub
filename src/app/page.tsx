@@ -158,7 +158,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_260px] gap-5">
               {/* Filters sidebar (desktop) */}
               <aside className="hidden lg:block">
-                <div className="sticky top-36 max-h-[calc(100vh-10rem)] rounded-xl border bg-card/50 p-3 shadow-sm">
+                <div className="sticky top-36 h-[calc(100vh-10rem)] rounded-xl border bg-card/50 p-3 shadow-sm overflow-hidden flex flex-col">
                   <FilterPanel />
                 </div>
               </aside>
@@ -205,8 +205,8 @@ export default function Home() {
                 <Github className="h-3.5 w-3.5" />
               </div>
               <span>
-                <span className="font-semibold text-foreground">GitFind</span> — продвинутый
-                поиск по GitHub
+                <span className="font-semibold text-foreground">GitFind</span> — системные
+                разработчики C/C++/Go/Python/Rust · Москва и Россия
               </span>
             </div>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">

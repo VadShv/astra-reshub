@@ -104,12 +104,12 @@ export function SearchInput({
 
   // Friendly, context-aware placeholder so the search feels approachable.
   const placeholders: Record<string, string> = {
-    repositories: "Например: react dashboard  ·  или language:rust stars:>1000",
-    users: "Например: python разработчик  ·  или location:Moscow language:go",
-    code: "Например: useEffect  ·  или useState in:file language:typescript",
-    issues: "Например: memory leak  ·  или is:open label:bug",
-    commits: "Например: fix parser  ·  или author:torvalds",
-    topics: "Например: machine-learning  ·  или react",
+    repositories: "Например: language:C topic:database  ·  или postgres storage",
+    users: "Например: language:Go location:Moscow  ·  или language:C++ location:Russia",
+    code: "Например: epoll_create language:C  ·  или grpc language:Go",
+    issues: "Например: is:open label:bug language:Rust",
+    commits: "Например: fix kernel  ·  или author:torvalds",
+    topics: "Например: linux-kernel  ·  или postgresql",
   };
 
   return (

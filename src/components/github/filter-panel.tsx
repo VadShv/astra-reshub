@@ -37,8 +37,10 @@ import {
   getLicenses,
   getSortOptions,
   POPULAR_LANGUAGES,
+  RUSSIA_LOCATIONS,
   SearchType,
 } from "@/lib/github";
+import { cn } from "@/lib/utils";
 import { useSearchStore } from "./store";
 
 interface FilterPanelProps {
@@ -148,8 +150,8 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
   };
 
   return (
-    <div className={className}>
-      <div className="flex items-center justify-between px-1 mb-3">
+    <div className={cn("flex flex-col h-full", className)}>
+      <div className="flex items-center justify-between px-1 pb-3 mb-1 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-primary" />
           <span className="font-semibold text-sm">Фильтры</span>
@@ -175,7 +177,7 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
         )}
       </div>
 
-      <ScrollArea className="h-[calc(100vh-13rem)] pr-3">
+      <ScrollArea className="flex-1 min-h-0 pr-3 -mr-1">
         <div className="space-y-5 pb-6">
           {/* Sort & order — applies to all types */}
           <div className="space-y-3">
@@ -425,14 +427,24 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
                 <SectionTitle icon={<MapPin className="h-3.5 w-3.5" />}>
                   Локация
                 </SectionTitle>
-                <Input
-                  placeholder="например, Moscow"
-                  value={(filters.userLocation as string) || ""}
-                  onChange={(e) =>
-                    handleChange("userLocation" as any, e.target.value || undefined)
+                <Select
+                  value={(filters.userLocation as string) || "__any"}
+                  onValueChange={(v) =>
+                    handleChange("userLocation" as any, v === "__any" ? undefined : v)
                   }
-                  className="h-8 text-sm"
-                />
+                >
+                  <SelectTrigger className="h-8 text-sm">
+                    <SelectValue placeholder="Любая" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__any">Любая</SelectItem>
+                    {RUSSIA_LOCATIONS.map((loc) => (
+                      <SelectItem key={loc} value={loc}>
+                        {loc}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <SectionTitle icon={<Users className="h-3.5 w-3.5" />}>
@@ -441,7 +453,7 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
                 <Input
                   type="number"
                   min={0}
-                  placeholder="напр., 1000"
+                  placeholder="напр., 10"
                   value={(filters.followersMinUser as string) || ""}
                   onChange={(e) =>
                     handleChange("followersMinUser" as any, e.target.value || undefined)
@@ -456,7 +468,7 @@ export function FilterPanel({ className, onAfterChange }: FilterPanelProps) {
                 <Input
                   type="number"
                   min={0}
-                  placeholder="напр., 10"
+                  placeholder="напр., 5"
                   value={(filters.reposMin as string) || ""}
                   onChange={(e) =>
                     handleChange("reposMin" as any, e.target.value || undefined)
