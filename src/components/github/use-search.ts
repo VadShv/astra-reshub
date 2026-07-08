@@ -150,6 +150,17 @@ export function useGitHubSearch({ enabled }: UseSearchArgs) {
     [active]
   );
 
+  // Reset back to the Hero/presets landing page: clears the active search,
+  // results, and the search form state.
+  const resetSearch = React.useCallback(() => {
+    setActive(null);
+    setResult(null);
+    setError(null);
+    setLoading(false);
+    useSearchStore.getState().setQuery("");
+    useSearchStore.getState().resetFilters();
+  }, []);
+
   return {
     result,
     loading,
@@ -158,5 +169,6 @@ export function useGitHubSearch({ enabled }: UseSearchArgs) {
     runSearch,
     changePage,
     retry: () => setTrigger((t) => t + 1),
+    resetSearch,
   };
 }

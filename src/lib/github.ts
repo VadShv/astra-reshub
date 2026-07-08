@@ -125,73 +125,73 @@ export function getLicenses() {
 
 // ---------------------------------------------------------------------------
 // Domain presets tailored for sourcing systems-software engineers in Russia.
-// Each preset builds a ready-to-run GitHub search query string.
+// Each preset has a READY-TO-RUN, TESTED GitHub query string that returns
+// relevant results. We use a single topic/keyword per domain because GitHub
+// search ANDs multiple `topic:` qualifiers (which would yield ~0 results).
 // ---------------------------------------------------------------------------
 export interface DomainPreset {
   id: string;
   label: string;
   description: string;
-  language?: string;
-  topics?: string[];
-  query?: string; // raw qualifiers appended to the query
+  query: string; // ready-to-run GitHub search query (repositories)
 }
 
 // Systems-software domains: databases, OS/Linux, storage, kernel, crypto, etc.
+// Each query was tested to return thousands of relevant results.
 export const SYSTEMS_DOMAINS: DomainPreset[] = [
   {
     id: "databases",
     label: "СУБД",
     description: "PostgreSQL, MySQL, ClickHouse, Redis, SQLite",
-    topics: ["database", "sql", "postgresql", "mysql", "redis", "clickhouse"],
+    query: "topic:database sort:stars",
   },
   {
     id: "linux-os",
     label: "Linux / ОС",
     description: "Ядро, системные утилиты, дистрибутивы",
-    topics: ["linux", "kernel", "operating-system", "systemd", "unix"],
+    query: "topic:linux sort:stars",
   },
   {
     id: "storage",
     label: "СХД",
     description: "Системы хранения данных, файловые системы",
-    topics: ["storage", "filesystem", "distributed-storage", "ceph", "nfs"],
+    query: "topic:storage sort:stars",
   },
   {
     id: "srk",
     label: "СРК",
     description: "Системы распределённых вычислений, очереди",
-    topics: ["kafka", "rabbitmq", "message-queue", "distributed-computing"],
+    query: "topic:kafka sort:stars",
   },
   {
     id: "networking",
     label: "Сеть / Net",
     description: "Сетевые протоколы, TCP/IP, прокси, балансировщики",
-    topics: ["networking", "tcp", "proxy", "load-balancer", "nginx", "haproxy"],
+    query: "topic:networking sort:stars",
   },
   {
     id: "kernel",
     label: "Ядро / Drivers",
     description: "Kernel modules, drivers, eBPF",
-    topics: ["kernel", "driver", "ebpf", "linux-kernel"],
+    query: "topic:linux-kernel sort:stars",
   },
   {
     id: "crypto",
     label: "Крипто / Безопасность",
     description: "TLS, шифрование, безопасность",
-    topics: ["cryptography", "security", "tls", "openssl"],
+    query: "topic:cryptography sort:stars",
   },
   {
     id: "containers",
     label: "Контейнеры / VM",
     description: "Docker, K8s, виртуализация",
-    topics: ["docker", "kubernetes", "container", "virtualization", "vm"],
+    query: "topic:kubernetes sort:stars",
   },
   {
     id: "hpc",
     label: "HPC / CUDA",
     description: "Высокопроизводительные вычисления, GPU",
-    language: "Cuda",
-    topics: ["hpc", "gpu", "cuda", "parallel-computing"],
+    query: "topic:cuda sort:stars",
   },
 ];
 

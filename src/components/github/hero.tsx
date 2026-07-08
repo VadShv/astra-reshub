@@ -42,7 +42,7 @@ const GROUPS: SuggestionGroup[] = [
       { query: "language:C++ location:Moscow repos:>10", label: "C++ · Москва", hint: "СУБД, движки" },
       { query: "language:Go location:Russia repos:>10", label: "Go · Россия", hint: "микросервисы, СРК" },
       { query: "language:Python location:Russia repos:>15", label: "Python · Россия", hint: "backend, автоматизация" },
-      { query: "language:Rust location:Russia repos:>5", label: "Rust · Россия", hint: "безопасные системы" },
+      { query: "language:Rust location:Russia repos:>3", label: "Rust · Россия", hint: "безопасные системы" },
       { query: "language:Shell location:Moscow repos:>20", label: "Shell/DevOps · Москва", hint: "инфраструктура" },
     ],
   },
@@ -51,12 +51,12 @@ const GROUPS: SuggestionGroup[] = [
     title: "Системные проекты",
     icon: <FolderGit2 className="h-4 w-4" />,
     items: [
-      { query: "language:C topic:database stars:>500", label: "СУБД на C", hint: "PostgreSQL-подобные" },
-      { query: "language:C++ topic:database stars:>500", label: "СУБД на C++", hint: "движки хранения" },
-      { query: "language:Go topic:kafka stars:>200", label: "Очереди на Go", hint: "СРК, брокеры" },
-      { query: "language:Rust topic:filesystem stars:>100", label: "Файловые системы", hint: "СХД" },
-      { query: "topic:linux-kernel stars:>500", label: "Linux kernel", hint: "драйверы, ядро" },
-      { query: "language:C topic:networking stars:>300", label: "Сетевое ПО на C", hint: "протоколы, прокси" },
+      { query: "language:C topic:database stars:>100", label: "СУБД на C", hint: "движки хранения" },
+      { query: "language:C++ topic:database stars:>100", label: "СУБД на C++", hint: "PostgreSQL-подобные" },
+      { query: "language:Go topic:kafka stars:>50", label: "Очереди на Go", hint: "СРК, брокеры" },
+      { query: "language:Rust topic:filesystem", label: "Файловые системы", hint: "СХД, Rust" },
+      { query: "topic:linux-kernel stars:>100", label: "Linux kernel", hint: "драйверы, ядро" },
+      { query: "language:C topic:networking stars:>100", label: "Сетевое ПО на C", hint: "протоколы, прокси" },
     ],
   },
   {
@@ -123,14 +123,11 @@ export function Hero({ onSearch }: { onSearch: () => void }) {
     onSearch();
   };
 
-  // Pick a domain preset → search repositories with that topic + language.
+  // Pick a domain preset → search repositories with the preset's ready query.
   const pickDomain = (domainId: string) => {
     const d = SYSTEMS_DOMAINS.find((x) => x.id === domainId);
     if (!d) return;
-    const topicQ = (d.topics || []).slice(0, 4).map((t) => `topic:${t}`).join(" ");
-    const langQ = d.language ? `language:${d.language}` : "";
-    const q = [topicQ, langQ].filter(Boolean).join(" ");
-    setQuery(q);
+    setQuery(d.query);
     setType("repositories");
     onSearch();
   };

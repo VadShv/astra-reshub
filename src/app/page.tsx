@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import {
   Github,
   Heart,
@@ -48,7 +47,7 @@ export default function Home() {
   const dashboardLogin = useUIStore((s) => s.dashboardLogin);
   const closeDashboard = useUIStore((s) => s.closeDashboard);
 
-  const { result, loading, error, active, runSearch, changePage, retry } =
+  const { result, loading, error, active, runSearch, changePage, retry, resetSearch } =
     useGitHubSearch({ enabled: true });
 
   const hasSearched = active !== null;
@@ -81,17 +80,21 @@ export default function Home() {
         {/* Row 1: logo + search input + actions */}
         <div className="mx-auto max-w-7xl px-4">
           <div className="flex items-center gap-3 h-16">
-            <Link href="/" className="flex items-center gap-2 shrink-0 group">
+            <button
+              onClick={() => resetSearch()}
+              className="flex items-center gap-2 shrink-0 group cursor-pointer"
+              title="Вернуться к пресетам"
+            >
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background group-hover:scale-105 transition-transform shadow-sm">
                 <Github className="h-5 w-5" />
               </div>
-              <div className="hidden lg:block leading-none">
+              <div className="hidden lg:block leading-none text-left">
                 <span className="font-bold text-base tracking-tight">GitFind</span>
                 <span className="block text-[10px] text-muted-foreground mt-0.5">
-                  advanced github search
+                  systems engineers search
                 </span>
               </div>
-            </Link>
+            </button>
 
             <div className="flex-1 max-w-2xl">
               <SearchInput
