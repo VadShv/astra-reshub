@@ -68,13 +68,14 @@ function inferPosition(candidate: Candidate): string {
 function buildComment(candidate: Candidate): string {
   const parts: string[] = [];
   if (candidate.bio) parts.push(candidate.bio);
+  const isLinkedIn = candidate.tags?.includes("linkedin");
   const stats: string[] = [];
   if (candidate.public_repos !== undefined)
     stats.push(`${candidate.public_repos} public repos`);
   if (candidate.followers !== undefined)
     stats.push(`${candidate.followers} followers`);
   if (candidate.created_at)
-    stats.push(`on GitHub since ${new Date(candidate.created_at).getFullYear()}`);
+    stats.push(`on ${isLinkedIn ? "LinkedIn" : "GitHub"} since ${new Date(candidate.created_at).getFullYear()}`);
   if (stats.length) parts.push(`(${stats.join("; ")})`);
   if (candidate.note) parts.push(`Note: ${candidate.note}`);
   return parts.join(" | ");
@@ -109,6 +110,7 @@ export function buildHuntFlowCsv(candidates: Candidate[]): string {
 
   const rows = candidates.map((c) => {
     const { firstName, lastName } = splitName(c);
+    const isLinkedIn = c.tags?.includes("linkedin");
     const tags = (c.tags || []).join(", ");
     const created = c.created_at
       ? new Date(c.created_at).toLocaleDateString("ru-RU")
@@ -121,7 +123,7 @@ export function buildHuntFlowCsv(candidates: Candidate[]): string {
       "", // phone — GitHub has no phone
       c.email || "",
       c.location || "",
-      "GitHub",
+      isLinkedIn ? "LinkedIn" : "GitHub",
       c.html_url,
       c.blog ? (c.blog.startsWith("http") ? c.blog : `https://${c.blog}`) : "",
       c.twitter_username ? `https://twitter.com/${c.twitter_username}` : "",

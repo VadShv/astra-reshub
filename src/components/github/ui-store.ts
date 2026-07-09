@@ -2,11 +2,13 @@
 
 import { create } from "zustand";
 
-// Tiny UI store (NOT persisted) that holds ephemeral view state shared across
-// deeply-nested components — e.g. which user profile dashboard is currently
-// open. The `initialItem` is the raw search-result object so the dashboard can
-// render instantly (avatar, login, html_url) before the enrichment API call.
+export type AppId = "launcher" | "gitfind" | "linkedin";
+
 interface UIStore {
+  // Which search system / view is active.
+  activeApp: AppId;
+  setApp: (app: AppId) => void;
+  // Which user profile dashboard is currently open (GitFind only).
   dashboardLogin: string | null;
   dashboardInitial: Record<string, any> | null;
   openDashboard: (login: string, initialItem?: Record<string, any>) => void;
@@ -14,6 +16,8 @@ interface UIStore {
 }
 
 export const useUIStore = create<UIStore>((set) => ({
+  activeApp: "launcher",
+  setApp: (app) => set({ activeApp: app }),
   dashboardLogin: null,
   dashboardInitial: null,
   openDashboard: (login, initialItem) =>
