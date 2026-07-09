@@ -2,7 +2,14 @@
 
 import { create } from "zustand";
 
-export type AppId = "launcher" | "gitfind" | "linkedin";
+export type AppId =
+  | "launcher"
+  | "gitfind"
+  | "linkedin"
+  | "cse"
+  | "lor"
+  | "habr"
+  | "stackoverflow";
 
 interface UIStore {
   // Which search system / view is active.
