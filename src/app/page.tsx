@@ -11,9 +11,17 @@ export default function Home() {
 
   if (activeApp === "gitfind") return <GitFindApp />;
   if (activeApp === "linkedin") return <LinkedInApp />;
+  // URL-based search systems rendered by the shared <UrlSearchApp>.
   if (activeApp === "cse") return <UrlSearchApp systemId="cse" />;
   if (activeApp === "lor") return <UrlSearchApp systemId="lor" />;
   if (activeApp === "habr") return <UrlSearchApp systemId="habr" />;
   if (activeApp === "stackoverflow") return <UrlSearchApp systemId="stackoverflow" />;
+  if (activeApp === "hh") return <UrlSearchApp systemId="hh" />;
+  if (activeApp === "superjob") return <UrlSearchApp systemId="superjob" />;
+  if (activeApp === "opennet") return <UrlSearchApp systemId="opennet" />;
+  if (activeApp === "vc") return <UrlSearchApp systemId="vc" />;
+  if (activeApp === "habrqa") return <UrlSearchApp systemId="habrqa" />;
+  if (activeApp === "ruso") return <UrlSearchApp systemId="ruso" />;
+  if (activeApp === "ubuntu") return <UrlSearchApp systemId="ubuntu" />;
   return <Launcher />;
 }

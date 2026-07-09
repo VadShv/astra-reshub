@@ -34,7 +34,18 @@ export interface UrlSystemConfig {
   tagline: string;
   description: string;
   accent: string; // tailwind gradient classes
-  iconKey: "google" | "terminal" | "habr" | "so" | "linkedin" | "github";
+  iconKey:
+    | "google"
+    | "terminal"
+    | "habr"
+    | "so"
+    | "linkedin"
+    | "github"
+    | "briefcase"
+    | "newspaper"
+    | "globe"
+    | "message"
+    | "book";
   sourceTag: string; // tag stored on manually-added candidates
   fields: FieldConfig[];
   presets: Preset[];
@@ -42,7 +53,18 @@ export interface UrlSystemConfig {
   summarize: (values: Record<string, any>) => string;
 }
 
-export type UrlSystemId = "cse" | "lor" | "habr" | "stackoverflow";
+export type UrlSystemId =
+  | "cse"
+  | "lor"
+  | "habr"
+  | "stackoverflow"
+  | "hh"
+  | "superjob"
+  | "opennet"
+  | "vc"
+  | "habrqa"
+  | "ruso"
+  | "ubuntu";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -373,6 +395,211 @@ const SO_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 5. hh.ru (HeadHunter) — резюме
+// --------------------------------------------------------------------------
+const HH_PRESETS: Preset[] = [
+  { id: "hh-cpp-msk", label: "C++ разработчик · Москва", hint: "системное ПО", values: { query: "C++ разработчик", area: "Москва" } },
+  { id: "hh-go-ru", label: "Go · Россия", hint: "микросервисы, СРК", values: { query: "Go разработчик", area: "Россия" } },
+  { id: "hh-dba", label: "DBA PostgreSQL", hint: "базы данных", values: { query: "PostgreSQL DBA", area: "Россия" } },
+  { id: "hh-rust", label: "Rust · Россия", hint: "системное ПО", values: { query: "Rust разработчик", area: "Россия" } },
+  { id: "hh-devops", label: "DevOps · Москва", hint: "K8s, инфраструктура", values: { query: "DevOps инженер", area: "Москва" } },
+  { id: "hh-storage", label: "Storage Engineer", hint: "СХД, Ceph", values: { query: "storage engineer", area: "Россия" } },
+];
+
+function buildHhUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const area = (v.area || "").trim();
+  // hh.ru resume search. area code: Москва=1, СПб=2, Россия=113. We map names.
+  const areaMap: Record<string, string> = {
+    "Москва": "1",
+    "Moscow": "1",
+    "Санкт-Петербург": "2",
+    "Saint Petersburg": "2",
+    "Россия": "113",
+    "Russia": "113",
+    "Новосибирск": "4",
+    "Екатеринбург": "3",
+  };
+  const params = new URLSearchParams();
+  params.set("tab", "all");
+  if (q) params.set("text", q);
+  if (area && areaMap[area]) params.set("area", areaMap[area]);
+  return `https://hh.ru/resume?${params.toString()}`;
+}
+
+const HH_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ разработчик" },
+  {
+    key: "area",
+    label: "Регион",
+    type: "select",
+    options: [
+      { value: "__any", label: "Любой" },
+      { value: "Москва", label: "Москва" },
+      { value: "Санкт-Петербург", label: "Санкт-Петербург" },
+      { value: "Новосибирск", label: "Новосибирск" },
+      { value: "Екатеринбург", label: "Екатеринбург" },
+      { value: "Россия", label: "Россия" },
+    ],
+  },
+];
+
+// --------------------------------------------------------------------------
+// 6. Superjob — резюме
+// --------------------------------------------------------------------------
+const SJ_PRESETS: Preset[] = [
+  { id: "sj-cpp", label: "C++ разработчик", hint: "системное ПО", values: { query: "C++ разработчик", town: "Москва" } },
+  { id: "sj-go", label: "Go разработчик", hint: "backend, СРК", values: { query: "Go разработчик", town: "Москва" } },
+  { id: "sj-dba", label: "DBA / администратор БД", hint: "PostgreSQL", values: { query: "администратор баз данных", town: "" } },
+  { id: "sj-python", label: "Python разработчик", hint: "backend", values: { query: "Python разработчик", town: "Россия" } },
+  { id: "sj-devops", label: "DevOps инженер", hint: "инфраструктура", values: { query: "DevOps", town: "Москва" } },
+  { id: "sj-linux", label: "Linux администратор", hint: "системы", values: { query: "Linux администратор", town: "" } },
+];
+
+function buildSjUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const town = (v.town || "").trim();
+  const params = new URLSearchParams();
+  if (q) params.set("keywords", q);
+  if (town) params.set("town", town === "Россия" ? "4" : town === "Москва" ? "4" : town === "Санкт-Петербург" ? "53" : "");
+  return `https://www.superjob.ru/resume/?${params.toString()}`;
+}
+
+const SJ_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ разработчик" },
+  {
+    key: "town",
+    label: "Город",
+    type: "select",
+    options: [
+      { value: "__any", label: "Любой" },
+      { value: "Москва", label: "Москва" },
+      { value: "Санкт-Петербург", label: "Санкт-Петербург" },
+      { value: "Россия", label: "Россия" },
+    ],
+  },
+];
+
+// --------------------------------------------------------------------------
+// 7. opennet.ru — новости + поиск по UNIX/Linux порталу
+// --------------------------------------------------------------------------
+const OPENNET_PRESETS: Preset[] = [
+  { id: "on-cpp", label: "C++ на opennet", hint: "новости, обсуждения", values: { query: "C++" } },
+  { id: "on-postgres", label: "PostgreSQL", hint: "СУБД", values: { query: "PostgreSQL" } },
+  { id: "on-linux", label: "Linux ядро", hint: "kernel", values: { query: "linux kernel" } },
+  { id: "on-go", label: "Go / golang", hint: "backend", values: { query: "golang" } },
+  { id: "on-ceph", label: "Ceph / СХД", hint: "хранение", values: { query: "ceph" } },
+  { id: "on-rust", label: "Rust", hint: "системное ПО", values: { query: "rust" } },
+];
+
+function buildOpennetUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  // opennet.ru search uses the stxt query param.
+  const params = new URLSearchParams();
+  if (q) params.set("sctxt", q);
+  params.set("sch", "1");
+  return `https://www.opennet.ru/search.cgi?${params.toString()}`;
+}
+
+const OPENNET_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, PostgreSQL, kernel..." },
+];
+
+// --------------------------------------------------------------------------
+// 8. VC.ru — IT-медиа, поиск по авторам/статьям
+// --------------------------------------------------------------------------
+const VC_PRESETS: Preset[] = [
+  { id: "vc-cpp", label: "C++ разработчики", hint: "статьи, авторы", values: { query: "C++ разработчик" } },
+  { id: "vc-go", label: "Go / golang", hint: "backend", values: { query: "golang" } },
+  { id: "vc-database", label: "Базы данных", hint: "PostgreSQL, ClickHouse", values: { query: "базы данных" } },
+  { id: "vc-kernel", label: "Linux kernel", hint: "системное ПО", values: { query: "linux kernel" } },
+  { id: "vc-devops", label: "DevOps", hint: "инфраструктура", values: { query: "devops" } },
+  { id: "vc-rust", label: "Rust", hint: "системное ПО", values: { query: "rust" } },
+];
+
+function buildVcUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  return `https://vc.ru/search?${params.toString()}`;
+}
+
+const VC_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, PostgreSQL..." },
+];
+
+// --------------------------------------------------------------------------
+// 9. Habr Q&A — вопросы/ответы (аналог SO на русском)
+// --------------------------------------------------------------------------
+const HABRQA_PRESETS: Preset[] = [
+  { id: "qa-cpp", label: "C++", hint: "вопросы/ответы", values: { query: "C++" } },
+  { id: "qa-go", label: "Go / golang", hint: "backend", values: { query: "golang" } },
+  { id: "qa-postgres", label: "PostgreSQL", hint: "СУБД", values: { query: "PostgreSQL" } },
+  { id: "qa-linux", label: "Linux", hint: "системное", values: { query: "Linux" } },
+  { id: "qa-rust", label: "Rust", hint: "системное ПО", values: { query: "Rust" } },
+  { id: "qa-kernel", label: "Ядро / drivers", hint: "kernel", values: { query: "kernel driver" } },
+];
+
+function buildHabrQaUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  return `https://qna.habr.com/search?${params.toString()}`;
+}
+
+const HABRQA_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, PostgreSQL..." },
+];
+
+// --------------------------------------------------------------------------
+// 10. ruSO — StackOverflow на русском (ru.stackoverflow.com)
+// --------------------------------------------------------------------------
+const RUSO_PRESETS: Preset[] = [
+  { id: "ruso-c", label: "C + linux", hint: "системное", values: { tags: "c,linux" } },
+  { id: "ruso-cpp", label: "C++ + базы", hint: "СУБД", values: { tags: "c++,базы-данных" } },
+  { id: "ruso-go", label: "Go", hint: "backend", values: { tags: "go" } },
+  { id: "ruso-pg", label: "PostgreSQL", hint: "СУБД", values: { tags: "postgresql" } },
+  { id: "ruso-rust", label: "Rust", hint: "системное ПО", values: { tags: "rust" } },
+  { id: "ruso-bash", label: "Bash / shell", hint: "инфраструктура", values: { tags: "bash,shell" } },
+];
+
+function buildRusoUrl(v: Record<string, any>): string {
+  const tags = (v.tags || "").split(",").map((t: string) => t.trim()).filter(Boolean);
+  const params = new URLSearchParams();
+  params.set("tab", "Reputation");
+  params.set("filter", "all");
+  if (tags.length) params.set("q", tags.join(" "));
+  return `https://ru.stackoverflow.com/users?${params.toString()}`;
+}
+
+const RUSO_FIELDS: FieldConfig[] = [
+  { key: "tags", label: "Теги (через запятую)", type: "tags", placeholder: "c,linux,c++" },
+];
+
+// --------------------------------------------------------------------------
+// 11. Ubuntu.ru forum — русскоязычное Linux-сообщество
+// --------------------------------------------------------------------------
+const UBUNTU_PRESETS: Preset[] = [
+  { id: "ub-c", label: "C / системное", hint: "разработка", values: { query: "C разработчик" } },
+  { id: "ub-cpp", label: "C++", hint: "движки, СУБД", values: { query: "C++" } },
+  { id: "ub-driver", label: "Драйверы / kernel", hint: "модули ядра", values: { query: "драйвер kernel" } },
+  { id: "ub-devops", label: "DevOps / shell", hint: "инфраструктура", values: { query: "shell devops" } },
+  { id: "ub-pg", label: "PostgreSQL", hint: "СУБД", values: { query: "PostgreSQL" } },
+  { id: "ub-rust", label: "Rust", hint: "системное ПО", values: { query: "rust" } },
+];
+
+function buildUbuntuUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const params = new URLSearchParams();
+  if (q) params.set("keywords", q);
+  return `https://forum.ubuntu.ru/index.php?action=search&${params.toString()}`;
+}
+
+const UBUNTU_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, kernel, PostgreSQL..." },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -431,6 +658,104 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: SO_PRESETS,
     buildUrl: buildSoUrl,
     summarize: (v) => summarizeValues(v, SO_FIELDS),
+  },
+  hh: {
+    id: "hh",
+    name: "hh.ru",
+    tagline: "HeadHunter · резюме",
+    description:
+      "Крупнейший российский job-сайт. Поиск резюме системных разработчиков (C, C++, Go, Python, Rust, DBA, DevOps) с фильтром по регионам РФ.",
+    accent: "from-red-500 to-rose-600",
+    iconKey: "briefcase",
+    sourceTag: "hh",
+    fields: HH_FIELDS,
+    presets: HH_PRESETS,
+    buildUrl: buildHhUrl,
+    summarize: (v) => summarizeValues(v, HH_FIELDS),
+  },
+  superjob: {
+    id: "superjob",
+    name: "Superjob",
+    tagline: "резюме · Россия",
+    description:
+      "Второй по величине российский job-сайт. Поиск резюме системных разработчиков и Linux-администраторов по городам РФ.",
+    accent: "from-pink-500 to-rose-500",
+    iconKey: "briefcase",
+    sourceTag: "superjob",
+    fields: SJ_FIELDS,
+    presets: SJ_PRESETS,
+    buildUrl: buildSjUrl,
+    summarize: (v) => summarizeValues(v, SJ_FIELDS),
+  },
+  opennet: {
+    id: "opennet",
+    name: "OpenNet",
+    tagline: "opennet.ru · UNIX/Linux",
+    description:
+      "Крупнейший русскоязычный портал по open-source, UNIX/Linux. Новости, статьи и обсуждения про ядро, СУБД, системное ПО. Активные комментаторы — инженеры.",
+    accent: "from-cyan-500 to-teal-600",
+    iconKey: "globe",
+    sourceTag: "opennet",
+    fields: OPENNET_FIELDS,
+    presets: OPENNET_PRESETS,
+    buildUrl: buildOpennetUrl,
+    summarize: (v) => summarizeValues(v, OPENNET_FIELDS),
+  },
+  vc: {
+    id: "vc",
+    name: "VC.ru",
+    tagline: "IT-медиа · авторы",
+    description:
+      "Крупнейшее российское IT-медиа. Авторы статей про C++, Go, Rust, базы данных, DevOps и инфраструктуру — часто действующие инженеры и техлиды.",
+    accent: "from-indigo-500 to-violet-600",
+    iconKey: "newspaper",
+    sourceTag: "vc",
+    fields: VC_FIELDS,
+    presets: VC_PRESETS,
+    buildUrl: buildVcUrl,
+    summarize: (v) => summarizeValues(v, VC_FIELDS),
+  },
+  habrqa: {
+    id: "habrqa",
+    name: "Habr Q&A",
+    tagline: "qna.habr.com · вопросы",
+    description:
+      "Русскоязычный Q&A-сервис от Хабра. Поиск экспертов по C++, Go, Rust, PostgreSQL, Linux и ядру через ответы на технические вопросы.",
+    accent: "from-teal-500 to-emerald-600",
+    iconKey: "message",
+    sourceTag: "habrqa",
+    fields: HABRQA_FIELDS,
+    presets: HABRQA_PRESETS,
+    buildUrl: buildHabrQaUrl,
+    summarize: (v) => summarizeValues(v, HABRQA_FIELDS),
+  },
+  ruso: {
+    id: "ruso",
+    name: "ru.SO",
+    tagline: "StackOverflow на русском",
+    description:
+      "Русская версия StackOverflow. Поиск пользователей по тегам (c, c++, go, postgresql, rust, bash, linux) с топом по репутации.",
+    accent: "from-amber-500 to-orange-600",
+    iconKey: "so",
+    sourceTag: "ruso",
+    fields: RUSO_FIELDS,
+    presets: RUSO_PRESETS,
+    buildUrl: buildRusoUrl,
+    summarize: (v) => summarizeValues(v, RUSO_FIELDS),
+  },
+  ubuntu: {
+    id: "ubuntu",
+    name: "Ubuntu.ru",
+    tagline: "forum.ubuntu.ru · Linux",
+    description:
+      "Крупнейшее русскоязычное Ubuntu-сообщество. Форум с обсуждениями драйверов, ядра, системного ПО и администрирования — активные участники часто инженеры.",
+    accent: "from-orange-500 to-red-600",
+    iconKey: "terminal",
+    sourceTag: "ubuntu",
+    fields: UBUNTU_FIELDS,
+    presets: UBUNTU_PRESETS,
+    buildUrl: buildUbuntuUrl,
+    summarize: (v) => summarizeValues(v, UBUNTU_FIELDS),
   },
 };
 

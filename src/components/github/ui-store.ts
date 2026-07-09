@@ -9,7 +9,14 @@ export type AppId =
   | "cse"
   | "lor"
   | "habr"
-  | "stackoverflow";
+  | "stackoverflow"
+  | "hh"
+  | "superjob"
+  | "opennet"
+  | "vc"
+  | "habrqa"
+  | "ruso"
+  | "ubuntu";
 
 interface UIStore {
   // Which search system / view is active.

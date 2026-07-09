@@ -19,6 +19,9 @@ import {
   HelpCircle,
   Github,
   Linkedin,
+  Briefcase,
+  MessageSquare,
+  BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -66,6 +69,11 @@ const ICONS: Record<string, React.ReactNode> = {
   so: <HelpCircle className="h-5 w-5" />,
   linkedin: <Linkedin className="h-5 w-5" />,
   github: <Github className="h-5 w-5" />,
+  briefcase: <Briefcase className="h-5 w-5" />,
+  newspaper: <Newspaper className="h-5 w-5" />,
+  globe: <Globe className="h-5 w-5" />,
+  message: <MessageSquare className="h-5 w-5" />,
+  book: <BookOpen className="h-5 w-5" />,
 };
 
 const ICONS_SM: Record<string, React.ReactNode> = {
@@ -75,6 +83,11 @@ const ICONS_SM: Record<string, React.ReactNode> = {
   so: <HelpCircle className="h-3.5 w-3.5" />,
   linkedin: <Linkedin className="h-3.5 w-3.5" />,
   github: <Github className="h-3.5 w-3.5" />,
+  briefcase: <Briefcase className="h-3.5 w-3.5" />,
+  newspaper: <Newspaper className="h-3.5 w-3.5" />,
+  globe: <Globe className="h-3.5 w-3.5" />,
+  message: <MessageSquare className="h-3.5 w-3.5" />,
+  book: <BookOpen className="h-3.5 w-3.5" />,
 };
 
 function SectionTitle({
@@ -724,6 +737,20 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: C++, Go, PostgreSQL, Rust";
     case "stackoverflow":
       return "Например: C, Linux, Go, kafka";
+    case "hh":
+      return "Например: C++ разработчик";
+    case "superjob":
+      return "Например: C++ разработчик, DBA";
+    case "opennet":
+      return "Например: C++, PostgreSQL, kernel";
+    case "vc":
+      return "Например: C++, Go, базы данных";
+    case "habrqa":
+      return "Например: C++, Go, PostgreSQL, Linux";
+    case "ruso":
+      return "Например: c, c++, go, postgresql";
+    case "ubuntu":
+      return "Например: C++, kernel, PostgreSQL";
   }
 }
 
@@ -737,5 +764,19 @@ function getHint(systemId: UrlSystemId): string {
       return "Резюме с Хабр.Карьеры или статьи на Хабре. Профили добавляйте в выборку вручную.";
     case "stackoverflow":
       return "Поиск пользователей StackOverflow по тегам и локации. Профили добавляйте в выборку вручную.";
+    case "hh":
+      return "Поиск резюме на hh.ru с фильтром по региону. Найденные резюме добавляйте в выборку вручную.";
+    case "superjob":
+      return "Поиск резюме на Superjob по городам РФ. Профили добавляйте в выборку вручную.";
+    case "opennet":
+      return "Поиск по opennet.ru — новости и обсуждения UNIX/Linux. Активных авторов добавляйте в выборку.";
+    case "vc":
+      return "Поиск статей на VC.ru. Авторов статей про системное ПО добавляйте в выборку.";
+    case "habrqa":
+      return "Поиск по Q&A Хабра. Экспerts, отвечающих на технические вопросы, добавляйте в выборку.";
+    case "ruso":
+      return "Поиск пользователей ru.stackoverflow.com по тегам. Топ по репутации добавляйте в выборку.";
+    case "ubuntu":
+      return "Поиск по форуму Ubuntu.ru. Активных участников обсуждений добавляйте в выборку.";
   }
 }

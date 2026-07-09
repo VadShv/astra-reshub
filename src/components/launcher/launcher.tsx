@@ -17,6 +17,8 @@ import {
   Newspaper,
   HelpCircle,
   Star,
+  Briefcase,
+  MessageSquare,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -146,6 +148,132 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "hh",
+    name: "hh.ru",
+    tagline: "HeadHunter · резюме",
+    description:
+      "Крупнейший российский job-сайт. Поиск резюме системных разработчиков (C, C++, Go, Python, Rust, DBA, DevOps) с фильтром по регионам РФ.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-red-500 to-rose-600",
+    features: [
+      { icon: <Briefcase className="h-4 w-4" />, text: "Резюме по регионам: Москва, СПб, Россия" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C++, Go, DBA, Rust, DevOps" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "hh.ru" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "superjob",
+    name: "Superjob",
+    tagline: "резюме · Россия",
+    description:
+      "Второй по величине российский job-сайт. Поиск резюме системных разработчиков и Linux-администраторов по городам РФ.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-pink-500 to-rose-500",
+    features: [
+      { icon: <Briefcase className="h-4 w-4" />, text: "Резюме по городам РФ" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C++, Go, DBA, Python, DevOps" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Superjob" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "opennet",
+    name: "OpenNet",
+    tagline: "opennet.ru · UNIX/Linux",
+    description:
+      "Крупнейший русскоязычный портал по open-source, UNIX/Linux. Новости, статьи и обсуждения про ядро, СУБД, системное ПО. Активные комментаторы — инженеры.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-cyan-500 to-teal-600",
+    features: [
+      { icon: <Globe className="h-4 w-4" />, text: "Новости и обсуждения UNIX/Linux" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C++, PostgreSQL, kernel, Ceph, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "opennet.ru" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "vc",
+    name: "VC.ru",
+    tagline: "IT-медиа · авторы",
+    description:
+      "Крупнейшее российское IT-медиа. Авторы статей про C++, Go, Rust, базы данных, DevOps и инфраструктуру — часто действующие инженеры и техлиды.",
+    icon: <Newspaper className="h-7 w-7" />,
+    accent: "from-indigo-500 to-violet-600",
+    features: [
+      { icon: <Newspaper className="h-4 w-4" />, text: "Статьи и авторы" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C++, Go, БД, kernel, DevOps, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "VC.ru" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "habrqa",
+    name: "Habr Q&A",
+    tagline: "qna.habr.com · вопросы",
+    description:
+      "Русскоязычный Q&A-сервис от Хабра. Поиск экспертов по C++, Go, Rust, PostgreSQL, Linux и ядру через ответы на технические вопросы.",
+    icon: <MessageSquare className="h-7 w-7" />,
+    accent: "from-teal-500 to-emerald-600",
+    features: [
+      { icon: <MessageSquare className="h-4 w-4" />, text: "Вопросы и ответы" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C++, Go, PostgreSQL, Linux, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Habr Q&A" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "ruso",
+    name: "ru.SO",
+    tagline: "StackOverflow на русском",
+    description:
+      "Русская версия StackOverflow. Поиск пользователей по тегам (c, c++, go, postgresql, rust, bash, linux) с топом по репутации.",
+    icon: <HelpCircle className="h-7 w-7" />,
+    accent: "from-amber-500 to-orange-600",
+    features: [
+      { icon: <HelpCircle className="h-4 w-4" />, text: "Пользователи по тегам" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C+linux, C+++БД, Go, PostgreSQL, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "ru.SO" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "ubuntu",
+    name: "Ubuntu.ru",
+    tagline: "forum.ubuntu.ru · Linux",
+    description:
+      "Крупнейшее русскоязычное Ubuntu-сообщество. Форум с обсуждениями драйверов, ядра, системного ПО и администрирования — активные участники часто инженеры.",
+    icon: <Terminal className="h-7 w-7" />,
+    accent: "from-orange-500 to-red-600",
+    features: [
+      { icon: <Terminal className="h-4 w-4" />, text: "Форум Ubuntu-сообщества" },
+      { icon: <Search className="h-4 w-4" />, text: "Пресеты: C, C++, kernel, DevOps, PostgreSQL" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Ubuntu.ru" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
 ];
 
 export function Launcher() {
@@ -193,7 +321,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              6 поисковых систем в одном месте
+              13 поисковых систем в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}
@@ -202,8 +330,9 @@ export function Launcher() {
               </span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Google CSE, GitFind, LinkedIn, Хабр, StackOverflow и Linux.org.ru.
-              Единая выборка и экспорт в ХАНТ для всех источников.
+              Google CSE, GitFind, LinkedIn, hh.ru, Superjob, Хабр, StackOverflow,
+              OpenNet, VC.ru, Habr Q&A, ru.SO, Ubuntu.ru и Linux.org.ru. Единая
+              выборка и экспорт в ХАНТ для всех источников.
             </p>
           </div>
 
@@ -326,15 +455,22 @@ export function Launcher() {
                 </button>
               ))}
               <span className="text-muted-foreground/40 px-1">·</span>
-              {(["cse", "habr", "stackoverflow"] as UrlSystemId[]).map((sid) => (
+              {(["cse", "hh", "habr", "stackoverflow", "opennet", "vc", "habrqa", "ruso", "ubuntu", "superjob"] as UrlSystemId[]).map((sid) => (
                 <button
                   key={sid}
                   onClick={() => setApp(sid)}
                   className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs hover:border-primary/50 hover:shadow-sm transition-all"
                 >
                   {sid === "cse" && <Globe className="h-3 w-3 text-rose-500" />}
+                  {sid === "hh" && <Briefcase className="h-3 w-3 text-red-500" />}
                   {sid === "habr" && <Newspaper className="h-3 w-3 text-violet-600" />}
                   {sid === "stackoverflow" && <HelpCircle className="h-3 w-3 text-orange-500" />}
+                  {sid === "opennet" && <Globe className="h-3 w-3 text-cyan-600" />}
+                  {sid === "vc" && <Newspaper className="h-3 w-3 text-indigo-600" />}
+                  {sid === "habrqa" && <MessageSquare className="h-3 w-3 text-teal-600" />}
+                  {sid === "ruso" && <HelpCircle className="h-3 w-3 text-amber-600" />}
+                  {sid === "ubuntu" && <Terminal className="h-3 w-3 text-orange-600" />}
+                  {sid === "superjob" && <Briefcase className="h-3 w-3 text-pink-500" />}
                   <span>{URL_SYSTEMS[sid].name}</span>
                 </button>
               ))}
@@ -353,7 +489,7 @@ export function Launcher() {
             </span>
             <span className="flex items-center gap-1 flex-wrap justify-center">
               <ExternalLink className="h-3 w-3" />
-              Google · GitHub · LinkedIn · Хабр · SO · LOR
+              Google · GitHub · LinkedIn · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · Habr Q&A · ru.SO · Ubuntu.ru · LOR
             </span>
           </div>
         </div>
