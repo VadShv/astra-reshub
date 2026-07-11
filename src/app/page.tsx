@@ -23,5 +23,6 @@ export default function Home() {
   if (activeApp === "habrqa") return <UrlSearchApp systemId="habrqa" />;
   if (activeApp === "ruso") return <UrlSearchApp systemId="ruso" />;
   if (activeApp === "ubuntu") return <UrlSearchApp systemId="ubuntu" />;
+  if (activeApp === "telegram") return <UrlSearchApp systemId="telegram" />;
   return <Launcher />;
 }

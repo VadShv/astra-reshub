@@ -19,6 +19,7 @@ import {
   Star,
   Briefcase,
   MessageSquare,
+  Send,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -26,6 +27,7 @@ import { SYSTEMS_DOMAINS } from "@/lib/github";
 import { LINKEDIN_PRESETS } from "@/lib/linkedin";
 import { URL_SYSTEMS, UrlSystemId } from "@/lib/search-systems";
 import { ResearchSection } from "./research-section";
+import { AggregatorsSection } from "./aggregators-section";
 
 interface SystemCard {
   id: AppId;
@@ -275,6 +277,24 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "telegram",
+    name: "Telegram",
+    tagline: "TG-каналы и поиск · главная RU-среда",
+    description:
+      "Telegram — основная среда общения русскоязычных разработчиков. X-ray поиск через Google (site:t.me), TG-агрегаторы + курируемая база из 15 профильных каналов: C++, Go, Rust, Python, DBA, DevOps, Linux.",
+    icon: <Send className="h-7 w-7" />,
+    accent: "from-sky-500 to-cyan-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "X-ray (site:t.me) + TG-агрегатор" },
+      { icon: <MessageSquare className="h-4 w-4" />, text: "База: 15 профильных TG-каналов" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Telegram" },
+      { label: "Каналов", value: "15 в базе" },
+    ],
+  },
 ];
 
 export function Launcher() {
@@ -322,7 +342,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              13 поисковых систем в одном месте
+              14 поисковых систем в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}
@@ -331,9 +351,9 @@ export function Launcher() {
               </span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Google CSE, GitFind, LinkedIn, hh.ru, Superjob, Хабр, StackOverflow,
-              OpenNet, VC.ru, Habr Q&A, ru.SO, Ubuntu.ru и Linux.org.ru. Единая
-              выборка и экспорт в ХАНТ для всех источников.
+              Google CSE, GitFind, LinkedIn, Telegram, hh.ru, Superjob, Хабр,
+              StackOverflow, OpenNet, VC.ru, Habr Q&A, ru.SO, Ubuntu.ru и Linux.org.ru.
+              Единая выборка и экспорт в ХАНТ для всех источников.
             </p>
           </div>
 
@@ -456,13 +476,14 @@ export function Launcher() {
                 </button>
               ))}
               <span className="text-muted-foreground/40 px-1">·</span>
-              {(["cse", "hh", "habr", "stackoverflow", "opennet", "vc", "habrqa", "ruso", "ubuntu", "superjob"] as UrlSystemId[]).map((sid) => (
+              {(["cse", "telegram", "hh", "habr", "stackoverflow", "opennet", "vc", "habrqa", "ruso", "ubuntu", "superjob"] as UrlSystemId[]).map((sid) => (
                 <button
                   key={sid}
                   onClick={() => setApp(sid)}
                   className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs hover:border-primary/50 hover:shadow-sm transition-all"
                 >
                   {sid === "cse" && <Globe className="h-3 w-3 text-rose-500" />}
+                  {sid === "telegram" && <Send className="h-3 w-3 text-sky-500" />}
                   {sid === "hh" && <Briefcase className="h-3 w-3 text-red-500" />}
                   {sid === "habr" && <Newspaper className="h-3 w-3 text-violet-600" />}
                   {sid === "stackoverflow" && <HelpCircle className="h-3 w-3 text-orange-500" />}
@@ -477,6 +498,9 @@ export function Launcher() {
               ))}
             </div>
           </div>
+
+          {/* Aggregators section — vacancy aggregators */}
+          <AggregatorsSection />
 
           {/* Research section — study new APIs */}
           <ResearchSection />
@@ -493,7 +517,7 @@ export function Launcher() {
             </span>
             <span className="flex items-center gap-1 flex-wrap justify-center">
               <ExternalLink className="h-3 w-3" />
-              Google · GitHub · LinkedIn · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · Habr Q&A · ru.SO · Ubuntu.ru · LOR
+              Google · GitHub · LinkedIn · Telegram · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · Habr Q&A · ru.SO · Ubuntu.ru · LOR
             </span>
           </div>
         </div>

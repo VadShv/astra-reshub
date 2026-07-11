@@ -28,6 +28,12 @@ export interface Preset {
   values: Record<string, any>;
 }
 
+export interface ResourceLink {
+  title: string;
+  url: string;
+  description?: string;
+}
+
 export interface UrlSystemConfig {
   id: UrlSystemId;
   name: string;
@@ -45,12 +51,15 @@ export interface UrlSystemConfig {
     | "newspaper"
     | "globe"
     | "message"
-    | "book";
+    | "book"
+    | "telegram";
   sourceTag: string; // tag stored on manually-added candidates
   fields: FieldConfig[];
   presets: Preset[];
   buildUrl: (values: Record<string, any>) => string;
   summarize: (values: Record<string, any>) => string;
+  // Optional curated resource links (e.g. a Telegram channel database).
+  resources?: { title: string; groups: ResourceLink[] };
 }
 
 export type UrlSystemId =
@@ -64,7 +73,8 @@ export type UrlSystemId =
   | "vc"
   | "habrqa"
   | "ruso"
-  | "ubuntu";
+  | "ubuntu"
+  | "telegram";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -600,6 +610,113 @@ const UBUNTU_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 12. Telegram — поиск через TG + база профильных каналов
+// --------------------------------------------------------------------------
+const TELEGRAM_PRESETS: Preset[] = [
+  // Search hypotheses — how to find developers via Telegram
+  {
+    id: "tg-google-cpp",
+    label: "Google: C++ в Telegram",
+    hint: "site:t.me C++ разработчик",
+    values: { query: "C++ разработчик", mode: "google" },
+  },
+  {
+    id: "tg-google-go",
+    label: "Google: Go/golang в TG",
+    hint: "site:t.me golang",
+    values: { query: "golang разработчик", mode: "google" },
+  },
+  {
+    id: "tg-google-rust",
+    label: "Google: Rust в TG",
+    hint: "site:t.me rust",
+    values: { query: "rust разработчик", mode: "google" },
+  },
+  {
+    id: "tg-google-dba",
+    label: "Google: PostgreSQL DBA",
+    hint: "site:t.me postgresql",
+    values: { query: "PostgreSQL DBA", mode: "google" },
+  },
+  {
+    id: "tg-google-devops",
+    label: "Google: DevOps в TG",
+    hint: "site:t.me devops kubernetes",
+    values: { query: "devops kubernetes", mode: "google" },
+  },
+  {
+    id: "tg-search-cpp",
+    label: "TG Search: C++ вакансии",
+    hint: "tgdev.io поиск",
+    values: { query: "C++ вакансия", mode: "tgsearch" },
+  },
+  {
+    id: "tg-search-go",
+    label: "TG Search: Go backend",
+    hint: "tgdev.io поиск",
+    values: { query: "Go backend", mode: "tgsearch" },
+  },
+  {
+    id: "tg-search-rust",
+    label: "TG Search: Rust системы",
+    hint: "tgdev.io поиск",
+    values: { query: "Rust системы", mode: "tgsearch" },
+  },
+];
+
+function buildTelegramUrl(v: Record<string, any>): string {
+  const q = (v.query || "").trim();
+  const mode = v.mode || "google";
+  if (!q) {
+    // Default: open a Telegram channel directory.
+    return "https://t.me/s/tgdev";
+  }
+  if (mode === "tgsearch") {
+    // tgdev.io / telegramchannels.me — public Telegram search aggregators.
+    return `https://tgdev.io/search?q=${encodeURIComponent(q)}`;
+  }
+  // Default: Google x-ray search inside Telegram (site:t.me).
+  const params = new URLSearchParams();
+  params.set("q", `site:t.me ${q}`);
+  return `https://www.google.com/search?${params.toString()}`;
+}
+
+const TELEGRAM_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ разработчик, golang, Rust..." },
+  {
+    key: "mode",
+    label: "Режим поиска",
+    type: "select",
+    options: [
+      { value: "google", label: "Google x-ray (site:t.me)" },
+      { value: "tgsearch", label: "TG-агрегатор (tgdev.io)" },
+    ],
+  },
+];
+
+// Curated database of profile Telegram channels for systems engineers.
+const TELEGRAM_RESOURCES = {
+  title: "База профильных TG-каналов",
+  groups: [
+    { title: "Вакансии и рекрутинг", url: "https://t.me/dev_jobs", description: "Вакансии для разработчиков" },
+    { title: "Python вакансии", url: "https://t.me/python_jobs", description: "Python-вакансии и резюме" },
+    { title: "Go вакансии", url: "https://t.me/golang_job", description: "Go/golang вакансии" },
+    { title: "C++ сообщество", url: "https://t.me/plusplus", description: "C++ обсуждения и вакансии" },
+    { title: "Rust на русском", url: "https://t.me/rustlang_ru", description: "Rust-сообщество РФ" },
+    { title: "DevOps чат", url: "https://t.me/devops_chat", description: "DevOps/SRE/K8s" },
+    { title: "Linux/org", url: "https://t.me/lorchannel", description: "LOR-зеркало" },
+    { title: "Highload", url: "https://t.me/highload", description: "Высокие нагрузки, БД" },
+    { title: "PostgreSQL-ru", url: "https://t.me/postgres_ru", description: "PostgreSQL на русском" },
+    { title: "ClickHouse", url: "https://t.me/clickhouse_ru", description: "ClickHouse-сообщество" },
+    { title: "Kubernetes RU", url: "https://t.me/kubernetes_ru", description: "K8s на русском" },
+    { title: "Мой круг", url: "https://t.me/moj_krug", description: "Вакансии от Хабр Карьеры" },
+    { title: "IT вакансии", url: "https://t.me/it_vacansy", description: "Общие IT-вакансии" },
+    { title: "Backend чат", url: "https://t.me/backend_chat", description: "Backend-разработка" },
+    { title: "Systems engineering", url: "https://t.me/system_design", description: "Системный дизайн" },
+  ] as ResourceLink[],
+};
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -756,6 +873,21 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: UBUNTU_PRESETS,
     buildUrl: buildUbuntuUrl,
     summarize: (v) => summarizeValues(v, UBUNTU_FIELDS),
+  },
+  telegram: {
+    id: "telegram",
+    name: "Telegram",
+    tagline: "TG-каналы и поиск · главная RU-среда",
+    description:
+      "Telegram — основная среда общения русскоязычных разработчиков. X-ray поиск через Google (site:t.me), поиск через TG-агрегаторы + курируемая база из 15 профильных каналов: C++, Go, Rust, Python, DBA, DevOps, Linux.",
+    accent: "from-sky-500 to-cyan-600",
+    iconKey: "telegram",
+    sourceTag: "telegram",
+    fields: TELEGRAM_FIELDS,
+    presets: TELEGRAM_PRESETS,
+    buildUrl: buildTelegramUrl,
+    summarize: (v) => summarizeValues(v, TELEGRAM_FIELDS),
+    resources: TELEGRAM_RESOURCES,
   },
 };
 

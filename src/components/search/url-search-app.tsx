@@ -22,6 +22,8 @@ import {
   Briefcase,
   MessageSquare,
   BookOpen,
+  Send,
+  Link2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -74,6 +76,7 @@ const ICONS: Record<string, React.ReactNode> = {
   globe: <Globe className="h-5 w-5" />,
   message: <MessageSquare className="h-5 w-5" />,
   book: <BookOpen className="h-5 w-5" />,
+  telegram: <Send className="h-5 w-5" />,
 };
 
 const ICONS_SM: Record<string, React.ReactNode> = {
@@ -88,6 +91,7 @@ const ICONS_SM: Record<string, React.ReactNode> = {
   globe: <Globe className="h-3.5 w-3.5" />,
   message: <MessageSquare className="h-3.5 w-3.5" />,
   book: <BookOpen className="h-3.5 w-3.5" />,
+  telegram: <Send className="h-3.5 w-3.5" />,
 };
 
 function SectionTitle({
@@ -370,6 +374,45 @@ export function UrlSearchApp({ systemId }: { systemId: UrlSystemId }) {
                   </div>
                 </div>
               </Card>
+
+              {/* Curated resources (e.g. Telegram channel database) */}
+              {config.resources && config.resources.groups.length > 0 && (
+                <Card className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Link2 className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-semibold">{config.resources.title}</h3>
+                    <Badge variant="secondary" className="ml-auto text-[10px]">
+                      {config.resources.groups.length}
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {config.resources.groups.map((r, i) => (
+                      <a
+                        key={i}
+                        href={r.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group flex items-center gap-2 rounded-lg border bg-card/60 px-3 py-2 hover:border-primary/50 hover:shadow-sm transition-all"
+                      >
+                        <span className="text-primary shrink-0">
+                          {ICONS_SM[config.iconKey]}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                            {r.title}
+                          </div>
+                          {r.description && (
+                            <div className="text-[11px] text-muted-foreground truncate">
+                              {r.description}
+                            </div>
+                          )}
+                        </div>
+                        <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 shrink-0 transition-opacity" />
+                      </a>
+                    ))}
+                  </div>
+                </Card>
+              )}
             </section>
           </div>
         </div>
@@ -751,6 +794,8 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: c, c++, go, postgresql";
     case "ubuntu":
       return "Например: C++, kernel, PostgreSQL";
+    case "telegram":
+      return "Например: C++ разработчик, golang, Rust";
   }
 }
 
@@ -778,5 +823,7 @@ function getHint(systemId: UrlSystemId): string {
       return "Поиск пользователей ru.stackoverflow.com по тегам. Топ по репутации добавляйте в выборку.";
     case "ubuntu":
       return "Поиск по форуму Ubuntu.ru. Активных участников обсуждений добавляйте в выборку.";
+    case "telegram":
+      return "X-ray поиск по Telegram через Google (site:t.me) или TG-агрегатор. Ниже — база из 15 профильных каналов. Кандидатов добавляйте в выборку вручную.";
   }
 }

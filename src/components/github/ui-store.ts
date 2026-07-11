@@ -16,7 +16,8 @@ export type AppId =
   | "vc"
   | "habrqa"
   | "ruso"
-  | "ubuntu";
+  | "ubuntu"
+  | "telegram";
 
 interface UIStore {
   // Which search system / view is active.
