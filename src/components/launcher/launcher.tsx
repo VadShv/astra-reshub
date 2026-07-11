@@ -30,6 +30,7 @@ import { ResearchSection } from "./research-section";
 import { AggregatorsSection } from "./aggregators-section";
 import { CandidateAggregatorsSection } from "./candidate-aggregators-section";
 import { CommunitiesSection } from "./communities-section";
+import { ExtensionsSection } from "./extensions-section";
 
 interface SystemCard {
   id: AppId;
@@ -500,6 +501,9 @@ export function Launcher() {
               ))}
             </div>
           </div>
+
+          {/* Browser extensions for recruitment */}
+          <ExtensionsSection />
 
           {/* Aggregators section — vacancy aggregators */}
           <AggregatorsSection />
