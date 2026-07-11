@@ -25,6 +25,7 @@ import { useSelectionStore } from "@/components/github/selection-store";
 import { SYSTEMS_DOMAINS } from "@/lib/github";
 import { LINKEDIN_PRESETS } from "@/lib/linkedin";
 import { URL_SYSTEMS, UrlSystemId } from "@/lib/search-systems";
+import { ResearchSection } from "./research-section";
 
 interface SystemCard {
   id: AppId;
@@ -476,6 +477,9 @@ export function Launcher() {
               ))}
             </div>
           </div>
+
+          {/* Research section — study new APIs */}
+          <ResearchSection />
         </div>
       </main>
 
