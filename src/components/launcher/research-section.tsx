@@ -40,6 +40,7 @@ import {
   STATUS_LABELS,
   STATUS_COLORS,
 } from "./research-store";
+import { CollapsibleSection } from "./collapsible-section";
 
 interface ResearchItem {
   id: string;
@@ -145,30 +146,20 @@ const ITEMS: ResearchItem[] = [
 
 export function ResearchSection() {
   return (
-    <section className="mt-14">
-      {/* Section header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
-            <FlaskConical className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold tracking-tight">Ресёрч</h2>
-            <p className="text-xs text-muted-foreground">
-              Изучение API для расширения SourcerHub — фиксируйте заметки, выводы и
-              идеи интеграции
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <CollapsibleSection
+      icon={<FlaskConical className="h-5 w-5" />}
+      iconAccent="from-violet-500 to-fuchsia-600"
+      title="Ресёрч"
+      subtitle="Изучение API для расширения SourcerHub — фиксируйте заметки, выводы и идеи интеграции"
+      count={ITEMS.length}
+    >
       {/* Research blocks grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {ITEMS.map((item) => (
           <ResearchBlock key={item.id} item={item} />
         ))}
       </div>
-    </section>
+    </CollapsibleSection>
   );
 }
 

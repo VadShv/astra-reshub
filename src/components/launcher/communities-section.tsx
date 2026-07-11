@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useResearchStore } from "./research-store";
+import { CollapsibleSection } from "./collapsible-section";
 
 interface CommunityLink {
   title: string;
@@ -118,37 +119,22 @@ export function CommunitiesSection() {
   const totalLinks = GROUPS.reduce((s, g) => s + g.links.length, 0);
 
   return (
-    <section className="mt-14">
-      {/* Section header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
-            <Users className="h-5 w-5" />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold tracking-tight">
-              Профильные сообщества{" "}
-              <span className="text-muted-foreground font-normal text-sm">
-                {totalLinks} форумов и списков рассылки
-              </span>
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Специфичные форумы и mailing-листы по Linux, СУБД, СХД и СРК — где
-              обитают системные инженеры. Активные участники — сильные кандидаты.
-            </p>
-          </div>
-        </div>
-
-        {/* Search filter */}
-        <div className="relative max-w-md mt-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Фильтр по названию или описанию..."
-            className="pl-9 h-9 text-sm"
-          />
-        </div>
+    <CollapsibleSection
+      icon={<Users className="h-5 w-5" />}
+      iconAccent="from-sky-500 to-blue-600"
+      title="Профильные сообщества"
+      subtitle="Форумы и mailing-листы по Linux, СУБД, СХД и СРК — где обитают системные инженеры. Активные участники — сильные кандидаты"
+      count={`${totalLinks} форумов`}
+    >
+      {/* Search filter */}
+      <div className="relative max-w-md mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Фильтр по названию или описанию..."
+          className="pl-9 h-9 text-sm"
+        />
       </div>
 
       {/* Groups grid */}
@@ -163,7 +149,7 @@ export function CommunitiesSection() {
           Ничего не найдено по запросу «{query}»
         </div>
       )}
-    </section>
+    </CollapsibleSection>
   );
 }
 

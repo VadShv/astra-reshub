@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { useResearchStore } from "./research-store";
+import { CollapsibleSection } from "./collapsible-section";
 
 interface Aggregator {
   id: string;
@@ -99,30 +100,20 @@ const AGGREGATORS: Aggregator[] = [
 
 export function AggregatorsSection() {
   return (
-    <section className="mt-14">
-      {/* Section header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
-            <Layers className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold tracking-tight">Агрегаторы вакансий</h2>
-            <p className="text-xs text-muted-foreground">
-              Сервисы, собирающие вакансии и резюме из множества источников — для
-              бенчмаркинга рынка и поиска по компаниям
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <CollapsibleSection
+      icon={<Layers className="h-5 w-5" />}
+      iconAccent="from-emerald-500 to-teal-600"
+      title="Агрегаторы вакансий"
+      subtitle="IT-сервисы, собирающие вакансии и резюме из множества источников — для бенчмаркинга рынка и поиска по компаниям"
+      count={AGGREGATORS.length}
+    >
       {/* Aggregators grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {AGGREGATORS.map((agg) => (
           <AggregatorBlock key={agg.id} agg={agg} />
         ))}
       </div>
-    </section>
+    </CollapsibleSection>
   );
 }
 
