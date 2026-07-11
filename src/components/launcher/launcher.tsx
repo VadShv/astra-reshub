@@ -28,6 +28,7 @@ import { LINKEDIN_PRESETS } from "@/lib/linkedin";
 import { URL_SYSTEMS, UrlSystemId } from "@/lib/search-systems";
 import { ResearchSection } from "./research-section";
 import { AggregatorsSection } from "./aggregators-section";
+import { CommunitiesSection } from "./communities-section";
 
 interface SystemCard {
   id: AppId;
@@ -501,6 +502,9 @@ export function Launcher() {
 
           {/* Aggregators section — vacancy aggregators */}
           <AggregatorsSection />
+
+          {/* Communities section — niche forums by domain */}
+          <CommunitiesSection />
 
           {/* Research section — study new APIs */}
           <ResearchSection />
