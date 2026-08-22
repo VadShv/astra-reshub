@@ -20,17 +20,22 @@ import {
   Briefcase,
   MessageSquare,
   Send,
+  Plus,
+  Book,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
 import { SYSTEMS_DOMAINS } from "@/lib/github";
 import { LINKEDIN_PRESETS } from "@/lib/linkedin";
 import { URL_SYSTEMS, UrlSystemId } from "@/lib/search-systems";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { ResearchSection } from "./research-section";
 import { AggregatorsSection } from "./aggregators-section";
 import { CandidateAggregatorsSection } from "./candidate-aggregators-section";
 import { CommunitiesSection } from "./communities-section";
 import { ExtensionsSection } from "./extensions-section";
+import { SuggestToolDialog } from "./suggest-tool-dialog";
+import { SuggestedToolsSection } from "./suggested-tools-section";
 
 interface SystemCard {
   id: AppId;
@@ -298,11 +303,102 @@ const SYSTEMS: SystemCard[] = [
       { label: "Каналов", value: "15 в базе" },
     ],
   },
+  {
+    id: "gitlab",
+    name: "GitLab",
+    tagline: "gitlab.com · код и профили",
+    description:
+      "GitLab — вторая по величине платформа хостинга кода. Поиск проектов и профилей разработчиков C, C++, Go, Rust. Многие системные проекты размещены здесь.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-orange-500 to-red-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск проектов и пользователей" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C/C++, Go, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "GitLab" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "codeforces",
+    name: "Codeforces",
+    tagline: "Спортивное программирование",
+    description:
+      "Codeforces — крупнейшая платформа спортивного программирования, основанная в России. Рейтинг по странам, поиск профилей сильных C++/Go разработчиков.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-blue-500 to-indigo-600",
+    features: [
+      { icon: <Star className="h-4 w-4" />, text: "Рейтинг по странам (RU, BY, KZ)" },
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:codeforces.com" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Codeforces" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "reddit",
+    name: "Reddit",
+    tagline: "r/cpp · r/golang · r/rust",
+    description:
+      "Reddit — англоязычные developer-сообщества. Поиск по сабреддитам: r/cpp, r/golang, r/rust, r/linuxdev, r/Python. Активные авторы — практикующие инженеры.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-orange-500 to-amber-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по 7+ сабреддитам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Rust, Linux, Python" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Reddit" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "devto",
+    name: "Dev.to",
+    tagline: "dev.to · статьи разработчиков",
+    description:
+      "Dev.to — сообщество разработчиков со статьями про C++, Go, Rust, Linux, базы данных. Авторы технических статей — опытные инженеры.",
+    icon: <Book className="h-7 w-7" />,
+    accent: "from-slate-500 to-gray-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск статей по ключевым словам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Rust, Linux, БД" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Dev.to" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "sourcehut",
+    name: "Sourcehut",
+    tagline: "sr.ht · минималистичный хостинг",
+    description:
+      "Sourcehut — минималистичная платформа хостинга кода, популярная среди C/Go/Rust разработчиков. Поиск проектов: ядро, CLI, системное ПО.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-emerald-500 to-green-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск проектов по языку" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C, Go, Rust, Linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Sourcehut" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
 ];
 
 export function Launcher() {
   const setApp = useUIStore((s) => s.setApp);
   const selectionCount = useSelectionStore((s) => s.candidates.length);
+  const [suggestOpen, setSuggestOpen] = React.useState(false);
 
   const featured = SYSTEMS.find((s) => s.featured)!;
   const rest = SYSTEMS.filter((s) => !s.featured);
@@ -310,7 +406,7 @@ export function Launcher() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
-      <header className="border-b bg-background/85 backdrop-blur-xl">
+      <header className="border-b bg-background/85 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
@@ -323,20 +419,32 @@ export function Launcher() {
               </span>
             </div>
           </div>
-          {selectionCount > 0 && (
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setApp("gitfind")}
-              className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+              onClick={() => setSuggestOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
             >
-              <ClipboardList className="h-3.5 w-3.5 text-primary" />
-              <span>Выборка</span>
-              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold px-1">
-                {selectionCount}
-              </span>
+              <Plus className="h-3.5 w-3.5 text-primary" />
+              <span className="hidden sm:inline">Предложить</span>
             </button>
-          )}
+            <ThemeToggle />
+            {selectionCount > 0 && (
+              <button
+                onClick={() => setApp("gitfind")}
+                className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+              >
+                <ClipboardList className="h-3.5 w-3.5 text-primary" />
+                <span>Выборка</span>
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold px-1">
+                  {selectionCount}
+                </span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
+
+      <SuggestToolDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
 
       {/* Main */}
       <main className="flex-1">
@@ -345,7 +453,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              14 поисковых систем в одном месте
+              19 поисковых систем в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}
@@ -355,7 +463,7 @@ export function Launcher() {
             </h1>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
               Google CSE, GitFind, LinkedIn, Telegram, hh.ru, Superjob, Хабр,
-              StackOverflow, OpenNet, VC.ru, Habr Q&A, ru.SO, Ubuntu.ru и Linux.org.ru.
+              StackOverflow, OpenNet, VC.ru, GitLab, Codeforces, Reddit, Dev.to, Sourcehut и др.
               Единая выборка и экспорт в ХАНТ для всех источников.
             </p>
           </div>
@@ -516,6 +624,9 @@ export function Launcher() {
 
           {/* Research section — study new APIs */}
           <ResearchSection />
+
+          {/* Suggested tools — user-submitted tools */}
+          <SuggestedToolsSection />
         </div>
       </main>
 
@@ -529,7 +640,7 @@ export function Launcher() {
             </span>
             <span className="flex items-center gap-1 flex-wrap justify-center">
               <ExternalLink className="h-3 w-3" />
-              Google · GitHub · LinkedIn · Telegram · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · Habr Q&A · ru.SO · Ubuntu.ru · LOR
+              Google · GitHub · LinkedIn · Telegram · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · GitLab · Codeforces · Reddit · Dev.to · Sourcehut · LOR
             </span>
           </div>
         </div>

@@ -24,5 +24,10 @@ export default function Home() {
   if (activeApp === "ruso") return <UrlSearchApp systemId="ruso" />;
   if (activeApp === "ubuntu") return <UrlSearchApp systemId="ubuntu" />;
   if (activeApp === "telegram") return <UrlSearchApp systemId="telegram" />;
+  if (activeApp === "gitlab") return <UrlSearchApp systemId="gitlab" />;
+  if (activeApp === "codeforces") return <UrlSearchApp systemId="codeforces" />;
+  if (activeApp === "reddit") return <UrlSearchApp systemId="reddit" />;
+  if (activeApp === "devto") return <UrlSearchApp systemId="devto" />;
+  if (activeApp === "sourcehut") return <UrlSearchApp systemId="sourcehut" />;
   return <Launcher />;
 }

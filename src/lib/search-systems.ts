@@ -74,7 +74,12 @@ export type UrlSystemId =
   | "habrqa"
   | "ruso"
   | "ubuntu"
-  | "telegram";
+  | "telegram"
+  | "gitlab"
+  | "codeforces"
+  | "reddit"
+  | "devto"
+  | "sourcehut";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -290,14 +295,14 @@ const HABR_PRESETS: Preset[] = [
 
 function buildHabrUrl(v: Record<string, any>): string {
   const q = (v.query || "").trim();
-  const target = v.target || "career";
+  const target = v.target && v.target !== "__any" ? v.target : "career";
   const enc = encodeURIComponent(q);
   if (target === "articles") {
     // Habr articles search
     return `https://habr.com/ru/search/?q=${enc}&target_type=posts&order=relevance`;
   }
   // Habr Career resume search (most useful for sourcing)
-  return `https://career.habr.com/resume?q=${enc}`;
+  return `https://career.habr.com/resumes?q=${enc}`;
 }
 
 // --------------------------------------------------------------------------
@@ -717,6 +722,164 @@ const TELEGRAM_RESOURCES = {
 };
 
 // --------------------------------------------------------------------------
+// 13. GitLab — code hosting, project & user search
+// --------------------------------------------------------------------------
+const GITLAB_PRESETS: Preset[] = [
+  { id: "gl-cpp", label: "C/C++ системы", hint: "kernel, embedded", values: { query: "linux kernel C", target: "projects" } },
+  { id: "gl-go", label: "Go backend", hint: "highload", values: { query: "go backend highload", target: "projects" } },
+  { id: "gl-rust", label: "Rust системы", hint: "systems", values: { query: "rust systems programming", target: "projects" } },
+  { id: "gl-users", label: "Профили разработчиков", hint: "по людям", values: { query: "C++ developer", target: "users" } },
+];
+
+function buildGitlabUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  const target = v.target && v.target !== "__any" ? v.target : "projects";
+  if (target === "users") {
+    return `https://gitlab.com/search?search=${q}&nav_source=users`;
+  }
+  return `https://gitlab.com/search?search=${q}&nav_source=projects`;
+}
+
+const GITLAB_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Rust, Linux..." },
+  {
+    key: "target",
+    label: "Тип поиска",
+    type: "select",
+    options: [
+      { value: "projects", label: "Проекты" },
+      { value: "users", label: "Пользователи" },
+    ],
+  },
+];
+
+// --------------------------------------------------------------------------
+// 14. Codeforces — competitive programming profiles
+// --------------------------------------------------------------------------
+const CF_PRESETS: Preset[] = [
+  { id: "cf-ru-top", label: "Топ России", hint: "рейтинг", values: { target: "ratings", country: "RU" } },
+  { id: "cf-cpp", label: "C++ программисты", hint: "Google x-ray", values: { query: "C++ Russia", target: "google" } },
+  { id: "cf-go", label: "Go программисты", hint: "Google x-ray", values: { query: "Go developer Russia", target: "google" } },
+  { id: "cf-algo", label: "Алгоритмисты", hint: "рейтинг", values: { target: "ratings", country: "" } },
+];
+
+function buildCfUrl(v: Record<string, any>): string {
+  const target = v.target && v.target !== "__any" ? v.target : "ratings";
+  if (target === "google") {
+    const q = encodeURIComponent((v.query || "").trim());
+    return `https://www.google.com/search?q=site:codeforces.com/profile+${q}`;
+  }
+  const country = v.country && v.country !== "__any" ? v.country : "";
+  if (country) {
+    return `https://codeforces.com/ratings/country/${country}`;
+  }
+  return `https://codeforces.com/ratings`;
+}
+
+const CF_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ программист..." },
+  {
+    key: "target",
+    label: "Режим",
+    type: "select",
+    options: [
+      { value: "ratings", label: "Рейтинг по стране" },
+      { value: "google", label: "Google x-ray (site:codeforces.com)" },
+    ],
+  },
+  {
+    key: "country",
+    label: "Страна",
+    type: "select",
+    options: [
+      { value: "RU", label: "Россия" },
+      { value: "BY", label: "Беларусь" },
+      { value: "KZ", label: "Казахстан" },
+      { value: "UA", label: "Украина" },
+      { value: "", label: "Все страны" },
+    ],
+  },
+];
+
+// --------------------------------------------------------------------------
+// 15. Reddit — developer communities
+// --------------------------------------------------------------------------
+const REDDIT_PRESETS: Preset[] = [
+  { id: "rd-cpp", label: "C/C++ сообщество", hint: "r/cpp", values: { query: "systems programming", subreddit: "cpp" } },
+  { id: "rd-go", label: "Go разработчики", hint: "r/golang", values: { query: "backend systems", subreddit: "golang" } },
+  { id: "rd-rust", label: "Rust разработчики", hint: "r/rust", values: { query: "systems", subreddit: "rust" } },
+  { id: "rd-linux", label: "Linux dev", hint: "r/linuxdev", values: { query: "kernel driver", subreddit: "linuxdev" } },
+  { id: "rd-python", label: "Python systems", hint: "r/Python", values: { query: "systems infrastructure", subreddit: "Python" } },
+];
+
+function buildRedditUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  const sub = v.subreddit && v.subreddit !== "__any" ? v.subreddit : "";
+  if (sub) {
+    return `https://www.reddit.com/r/${sub}/search/?q=${q}&sort=relevance&restrict_sr=1`;
+  }
+  return `https://www.reddit.com/search/?q=${q}&sort=relevance`;
+}
+
+const REDDIT_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "systems programming, kernel..." },
+  {
+    key: "subreddit",
+    label: "Subreddit",
+    type: "select",
+    options: [
+      { value: "cpp", label: "r/cpp" },
+      { value: "golang", label: "r/golang" },
+      { value: "rust", label: "r/rust" },
+      { value: "linuxdev", label: "r/linuxdev" },
+      { value: "Python", label: "r/Python" },
+      { value: "C_Programming", label: "r/C_Programming" },
+      { value: "experienceddevs", label: "r/experienceddevs" },
+      { value: "", label: "Весь Reddit" },
+    ],
+  },
+];
+
+// --------------------------------------------------------------------------
+// 16. Dev.to — developer articles & profiles
+// --------------------------------------------------------------------------
+const DEVTO_PRESETS: Preset[] = [
+  { id: "dt-cpp", label: "C++ статьи", hint: "системное ПО", values: { query: "C++ systems programming" } },
+  { id: "dt-go", label: "Go статьи", hint: "backend", values: { query: "Go backend highload" } },
+  { id: "dt-rust", label: "Rust статьи", hint: "системное", values: { query: "Rust systems" } },
+  { id: "dt-linux", label: "Linux/ядро", hint: "kernel", values: { query: "Linux kernel development" } },
+  { id: "dt-db", label: "Базы данных", hint: "PostgreSQL, СУБД", values: { query: "database PostgreSQL internals" } },
+];
+
+function buildDevtoUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://dev.to/search?q=${q}`;
+}
+
+const DEVTO_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Rust, Linux..." },
+];
+
+// --------------------------------------------------------------------------
+// 17. Sourcehut — minimalist code hosting
+// --------------------------------------------------------------------------
+const SH_PRESETS: Preset[] = [
+  { id: "sh-c", label: "C проекты", hint: "системное", values: { query: "C linux" } },
+  { id: "sh-go", label: "Go проекты", hint: "CLI, сервисы", values: { query: "Go cli" } },
+  { id: "sh-rust", label: "Rust проекты", hint: "системное", values: { query: "Rust systems" } },
+  { id: "sh-linux", label: "Linux/ядро", hint: "kernel", values: { query: "linux kernel" } },
+];
+
+function buildSourcehutUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://sr.ht/projects?search=${q}`;
+}
+
+const SH_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C, Go, Rust, Linux..." },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -888,6 +1051,76 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     buildUrl: buildTelegramUrl,
     summarize: (v) => summarizeValues(v, TELEGRAM_FIELDS),
     resources: TELEGRAM_RESOURCES,
+  },
+  gitlab: {
+    id: "gitlab",
+    name: "GitLab",
+    tagline: "gitlab.com · код и профили",
+    description:
+      "GitLab — вторая по величине платформа хостинга кода. Поиск проектов и профилей разработчиков C, C++, Go, Rust. Многие системные проекты (kernel, embedded, infrastructure) размещены здесь.",
+    accent: "from-orange-500 to-red-600",
+    iconKey: "github",
+    sourceTag: "gitlab",
+    fields: GITLAB_FIELDS,
+    presets: GITLAB_PRESETS,
+    buildUrl: buildGitlabUrl,
+    summarize: (v) => summarizeValues(v, GITLAB_FIELDS),
+  },
+  codeforces: {
+    id: "codeforces",
+    name: "Codeforces",
+    tagline: "Спортивное программирование",
+    description:
+      "Codeforces — крупнейшая платформа спортивного программирования, основанная в России. Рейтинг по странам, поиск профилей сильных C++/Go разработчиков через Google x-ray.",
+    accent: "from-blue-500 to-indigo-600",
+    iconKey: "terminal",
+    sourceTag: "codeforces",
+    fields: CF_FIELDS,
+    presets: CF_PRESETS,
+    buildUrl: buildCfUrl,
+    summarize: (v) => summarizeValues(v, CF_FIELDS),
+  },
+  reddit: {
+    id: "reddit",
+    name: "Reddit",
+    tagline: "r/cpp · r/golang · r/rust",
+    description:
+      "Reddit — англоязычные developer-сообщества. Поиск по тематическим сабреддитам: r/cpp, r/golang, r/rust, r/linuxdev, r/Python. Активные авторы и комментаторы — практикующие инженеры.",
+    accent: "from-orange-500 to-amber-600",
+    iconKey: "globe",
+    sourceTag: "reddit",
+    fields: REDDIT_FIELDS,
+    presets: REDDIT_PRESETS,
+    buildUrl: buildRedditUrl,
+    summarize: (v) => summarizeValues(v, REDDIT_FIELDS),
+  },
+  devto: {
+    id: "devto",
+    name: "Dev.to",
+    tagline: "dev.to · статьи разработчиков",
+    description:
+      "Dev.to — сообщество разработчиков со статьями про C++, Go, Rust, Linux, базы данных. Авторы технических статей — часто опытные инженеры, доступные для контакта.",
+    accent: "from-slate-500 to-gray-700",
+    iconKey: "book",
+    sourceTag: "devto",
+    fields: DEVTO_FIELDS,
+    presets: DEVTO_PRESETS,
+    buildUrl: buildDevtoUrl,
+    summarize: (v) => summarizeValues(v, DEVTO_FIELDS),
+  },
+  sourcehut: {
+    id: "sourcehut",
+    name: "Sourcehut",
+    tagline: "sr.ht · минималистичный хостинг",
+    description:
+      "Sourcehut — минималистичная платформа хостинга кода, популярная среди C/Go/Rust разработчиков. Поиск проектов по языку и тематике — ядро, CLI, системное ПО.",
+    accent: "from-emerald-500 to-green-700",
+    iconKey: "github",
+    sourceTag: "sourcehut",
+    fields: SH_FIELDS,
+    presets: SH_PRESETS,
+    buildUrl: buildSourcehutUrl,
+    summarize: (v) => summarizeValues(v, SH_FIELDS),
   },
 };
 

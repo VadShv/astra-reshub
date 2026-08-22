@@ -17,7 +17,12 @@ export type AppId =
   | "habrqa"
   | "ruso"
   | "ubuntu"
-  | "telegram";
+  | "telegram"
+  | "gitlab"
+  | "codeforces"
+  | "reddit"
+  | "devto"
+  | "sourcehut";
 
 interface UIStore {
   // Which search system / view is active.

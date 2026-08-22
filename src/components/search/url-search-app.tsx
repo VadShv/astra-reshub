@@ -796,6 +796,18 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: C++, kernel, PostgreSQL";
     case "telegram":
       return "Например: C++ разработчик, golang, Rust";
+    case "gitlab":
+      return "Например: C++, Go, Rust, Linux";
+    case "codeforces":
+      return "Например: C++ программист, Russia";
+    case "reddit":
+      return "Например: systems programming, kernel";
+    case "devto":
+      return "Например: C++, Go, Rust, Linux";
+    case "sourcehut":
+      return "Например: C, Go, Rust, Linux";
+    default:
+      return "Введите запрос...";
   }
 }
 
@@ -825,5 +837,17 @@ function getHint(systemId: UrlSystemId): string {
       return "Поиск по форуму Ubuntu.ru. Активных участников обсуждений добавляйте в выборку.";
     case "telegram":
       return "X-ray поиск по Telegram через Google (site:t.me) или TG-агрегатор. Ниже — база из 15 профильных каналов. Кандидатов добавляйте в выборку вручную.";
+    case "gitlab":
+      return "Поиск проектов и пользователей GitLab. Профили разработчиков добавляйте в выборку вручную.";
+    case "codeforces":
+      return "Рейтинг Codeforces по странам или Google x-ray по профилям. Сильных программистов добавляйте в выборку.";
+    case "reddit":
+      return "Поиск по сабреддитам Reddit. Активных авторов и комментаторов добавляйте в выборку.";
+    case "devto":
+      return "Поиск статей на Dev.to. Авторов технических статей добавляйте в выборку.";
+    case "sourcehut":
+      return "Поиск проектов на Sourcehut. Владельцев проектов добавляйте в выборку.";
+    default:
+      return "Откройте ссылку в браузере и добавляйте кандидатов в выборку.";
   }
 }
