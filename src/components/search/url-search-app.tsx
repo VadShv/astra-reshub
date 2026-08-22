@@ -806,6 +806,26 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: C++, Go, Rust, Linux";
     case "sourcehut":
       return "Например: C, Go, Rust, Linux";
+    case "hackersnews":
+      return "Например: C++ developer, Go backend, who is hiring";
+    case "bitbucket":
+      return "Например: C++, Go, Rust, Python";
+    case "kaggle":
+      return "Например: Python, C++, PostgreSQL";
+    case "dockerhub":
+      return "Например: postgres, redis, nginx, kafka";
+    case "gopkg":
+      return "Например: postgres, kafka, grpc";
+    case "crates":
+      return "Например: linux, database, networking";
+    case "pypi":
+      return "Например: postgres, linux, asyncio";
+    case "codeberg":
+      return "Например: C, Go, Rust, Linux";
+    case "leetcode":
+      return "Например: C++, Go, Python, Rust";
+    case "medium":
+      return "Например: C++, Go, Rust, Linux";
     default:
       return "Введите запрос...";
   }
@@ -847,6 +867,26 @@ function getHint(systemId: UrlSystemId): string {
       return "Поиск статей на Dev.to. Авторов технических статей добавляйте в выборку.";
     case "sourcehut":
       return "Поиск проектов на Sourcehut. Владельцев проектов добавляйте в выборку.";
+    case "hackersnews":
+      return "Поиск по HackerNews через Algolia. Обсуждения, треды «Who is hiring». Активных комментаторов добавляйте в выборку.";
+    case "bitbucket":
+      return "Поиск по Bitbucket (Atlassian). Профили разработчиков добавляйте в выборку.";
+    case "kaggle":
+      return "Поиск по Kaggle. Профили data-science и ML-инженеров добавляйте в выборку.";
+    case "dockerhub":
+      return "Поиск по Docker Hub. Авторов образов (DevOps/инфраструктура) добавляйте в выборку.";
+    case "gopkg":
+      return "Поиск по pkg.go.dev. Авторов Go-пакетов добавляйте в выборку.";
+    case "crates":
+      return "Поиск по crates.io. Авторов Rust-пакетов добавляйте в выборку.";
+    case "pypi":
+      return "Поиск по PyPI. Авторов Python-пакетов добавляйте в выборку.";
+    case "codeberg":
+      return "Поиск по Codeberg (open source). Владельцев проектов добавляйте в выборку.";
+    case "leetcode":
+      return "Google x-ray по LeetCode. Профили алгоритмистов добавляйте в выборку.";
+    case "medium":
+      return "Поиск статей на Medium. Авторов технических статей добавляйте в выборку.";
     default:
       return "Откройте ссылку в браузере и добавляйте кандидатов в выборку.";
   }

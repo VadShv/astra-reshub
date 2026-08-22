@@ -393,6 +393,186 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "hackersnews",
+    name: "HackerNews",
+    tagline: "news.ycombinator.com · дискуссии",
+    description:
+      "HackerNews — главное англоязычное dev-сообщество. Поиск по обсуждениям, тредам «Who is hiring» и профилям.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-orange-500 to-amber-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск через Algolia API" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Rust, who is hiring" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "HackerNews" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "bitbucket",
+    name: "Bitbucket",
+    tagline: "bitbucket.org · Atlassian",
+    description:
+      "Bitbucket — платформа хостинга кода от Atlassian. Поиск репозиториев C, C++, Go, Rust. Enterprise-проекты.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-blue-500 to-sky-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск репозиториев" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Rust, Python" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Bitbucket" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "kaggle",
+    name: "Kaggle",
+    tagline: "kaggle.com · Data Science",
+    description:
+      "Kaggle — платформа для data science и ML. Поиск профилей дата-сайентистов, Python-разработчиков и DBA.",
+    icon: <Book className="h-7 w-7" />,
+    accent: "from-sky-500 to-blue-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по профилям и ноутбукам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: Python, C++, PostgreSQL" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Kaggle" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "dockerhub",
+    name: "Docker Hub",
+    tagline: "hub.docker.com · DevOps",
+    description:
+      "Docker Hub — реестр контейнерных образов. Поиск авторов образов PostgreSQL, Redis, Kafka, Nginx — DevOps-инженеры.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-blue-500 to-cyan-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по образам и авторам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: postgres, redis, kafka, nginx" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Docker Hub" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "gopkg",
+    name: "pkg.go.dev",
+    tagline: "Go-пакеты · авторы",
+    description:
+      "pkg.go.dev — реестр Go-пакетов. Поиск авторов пакетов для PostgreSQL, Kafka, gRPC, системного программирования.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-cyan-500 to-teal-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по Go-пакетам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: postgres, kafka, grpc, linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "pkg.go.dev" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "crates",
+    name: "crates.io",
+    tagline: "Rust-пакеты · авторы",
+    description:
+      "crates.io — реестр Rust-пакетов. Поиск авторов пакетов для Linux, баз данных, сетевого программирования.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-orange-500 to-red-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по Rust-пакетам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: linux, database, networking, cli" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "crates.io" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "pypi",
+    name: "PyPI",
+    tagline: "pypi.org · Python-пакеты",
+    description:
+      "PyPI — реестр Python-пакетов. Поиск авторов пакетов для PostgreSQL, Linux, asyncio, C bindings.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-blue-500 to-indigo-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по Python-пакетам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: postgres, linux, asyncio, ctypes" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "PyPI" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "codeberg",
+    name: "Codeberg",
+    tagline: "codeberg.org · open source",
+    description:
+      "Codeberg — некоммерческая платформа хостинга кода (Gitea). Популярна среди open-source C/Go/Rust разработчиков.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-teal-500 to-cyan-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск проектов по языку" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C, Go, Rust, kernel" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Codeberg" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "leetcode",
+    name: "LeetCode",
+    tagline: "leetcode.com · алгоритмика",
+    description:
+      "LeetCode — платформа алгоритмических задач. Google x-ray поиск профилей по языку и региону. Сильные алгоритмисты.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-amber-500 to-yellow-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:leetcode.com" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "LeetCode" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "medium",
+    name: "Medium",
+    tagline: "medium.com · статьи",
+    description:
+      "Medium — платформа статей. Технические статьи про C++, Go, Rust, Linux kernel, базы данных. Авторы — опытные инженеры.",
+    icon: <Book className="h-7 w-7" />,
+    accent: "from-slate-500 to-gray-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск статей по ключевым словам" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Rust, Linux, БД" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Medium" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
 ];
 
 export function Launcher() {
@@ -453,7 +633,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              19 поисковых систем в одном месте
+              29 поисковых систем в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}
@@ -463,7 +643,8 @@ export function Launcher() {
             </h1>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
               Google CSE, GitFind, LinkedIn, Telegram, hh.ru, Superjob, Хабр,
-              StackOverflow, OpenNet, VC.ru, GitLab, Codeforces, Reddit, Dev.to, Sourcehut и др.
+              StackOverflow, GitLab, Codeforces, Reddit, HackerNews, Docker Hub,
+              pkg.go.dev, crates.io, PyPI, LeetCode, Medium и др.
               Единая выборка и экспорт в ХАНТ для всех источников.
             </p>
           </div>
@@ -640,7 +821,7 @@ export function Launcher() {
             </span>
             <span className="flex items-center gap-1 flex-wrap justify-center">
               <ExternalLink className="h-3 w-3" />
-              Google · GitHub · LinkedIn · Telegram · hh.ru · Superjob · Хабр · SO · OpenNet · VC.ru · GitLab · Codeforces · Reddit · Dev.to · Sourcehut · LOR
+              Google · GitHub · LinkedIn · Telegram · hh.ru · Хабр · GitLab · Codeforces · Reddit · HackerNews · Docker Hub · pkg.go.dev · crates.io · PyPI · LeetCode · Medium · Codeberg · Bitbucket · Kaggle · LOR
             </span>
           </div>
         </div>

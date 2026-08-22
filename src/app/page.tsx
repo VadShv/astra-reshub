@@ -29,5 +29,15 @@ export default function Home() {
   if (activeApp === "reddit") return <UrlSearchApp systemId="reddit" />;
   if (activeApp === "devto") return <UrlSearchApp systemId="devto" />;
   if (activeApp === "sourcehut") return <UrlSearchApp systemId="sourcehut" />;
+  if (activeApp === "hackersnews") return <UrlSearchApp systemId="hackersnews" />;
+  if (activeApp === "bitbucket") return <UrlSearchApp systemId="bitbucket" />;
+  if (activeApp === "kaggle") return <UrlSearchApp systemId="kaggle" />;
+  if (activeApp === "dockerhub") return <UrlSearchApp systemId="dockerhub" />;
+  if (activeApp === "gopkg") return <UrlSearchApp systemId="gopkg" />;
+  if (activeApp === "crates") return <UrlSearchApp systemId="crates" />;
+  if (activeApp === "pypi") return <UrlSearchApp systemId="pypi" />;
+  if (activeApp === "codeberg") return <UrlSearchApp systemId="codeberg" />;
+  if (activeApp === "leetcode") return <UrlSearchApp systemId="leetcode" />;
+  if (activeApp === "medium") return <UrlSearchApp systemId="medium" />;
   return <Launcher />;
 }

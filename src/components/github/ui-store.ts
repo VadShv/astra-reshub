@@ -22,7 +22,17 @@ export type AppId =
   | "codeforces"
   | "reddit"
   | "devto"
-  | "sourcehut";
+  | "sourcehut"
+  | "hackersnews"
+  | "bitbucket"
+  | "kaggle"
+  | "dockerhub"
+  | "gopkg"
+  | "crates"
+  | "pypi"
+  | "codeberg"
+  | "leetcode"
+  | "medium";
 
 interface UIStore {
   // Which search system / view is active.

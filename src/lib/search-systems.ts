@@ -79,7 +79,17 @@ export type UrlSystemId =
   | "codeforces"
   | "reddit"
   | "devto"
-  | "sourcehut";
+  | "sourcehut"
+  | "hackersnews"
+  | "bitbucket"
+  | "kaggle"
+  | "dockerhub"
+  | "gopkg"
+  | "crates"
+  | "pypi"
+  | "codeberg"
+  | "leetcode"
+  | "medium";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -149,12 +159,41 @@ const CSE_PRESETS: Preset[] = [
     },
   },
   {
-    id: "cse-habr-go",
-    label: "Статьи Хабра про Go+Kafka",
-    hint: "site:habr.com",
+    id: "cse-habr-cpp",
+    label: "C++ резюме Хабр",
+    hint: "site:career.habr.com/resumes",
     values: {
-      query: "Go Kafka",
-      site: "habr.com",
+      query: '"C++ разработчик"',
+      site: "career.habr.com/resumes",
+      location: "Москва",
+    },
+  },
+  {
+    id: "cse-habr-go",
+    label: "Go резюме Хабр",
+    hint: "site:career.habr.com/resumes",
+    values: {
+      query: '"Go разработчик"',
+      site: "career.habr.com/resumes",
+      location: "Россия",
+    },
+  },
+  {
+    id: "cse-habr-rust",
+    label: "Rust резюме Хабр",
+    hint: "site:career.habr.com/resumes",
+    values: {
+      query: '"Rust разработчик"',
+      site: "career.habr.com/resumes",
+    },
+  },
+  {
+    id: "cse-habr-users",
+    label: "Профили Хабр (users)",
+    hint: "site:habr.com/users",
+    values: {
+      query: '"C++"',
+      site: "habr.com/users",
     },
   },
   {
@@ -880,6 +919,199 @@ const SH_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 18. HackerNews — developer discussions, who-is-hiring
+// --------------------------------------------------------------------------
+const HN_PRESETS: Preset[] = [
+  { id: "hn-cpp", label: "C++ разработчик", hint: "обсуждения", values: { query: "C++ developer" } },
+  { id: "hn-go", label: "Go backend", hint: "highload", values: { query: "Go backend highload" } },
+  { id: "hn-rust", label: "Rust systems", hint: "системное", values: { query: "Rust systems programming" } },
+  { id: "hn-linux", label: "Linux kernel", hint: "ядро", values: { query: "Linux kernel development" } },
+  { id: "hn-hiring", label: "Кто нанимает", hint: "who is hiring", values: { query: "Ask HN: Who is hiring" } },
+];
+
+function buildHnUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://hn.algolia.com/?q=${q}`;
+}
+
+const HN_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Rust, Linux..." },
+];
+
+// --------------------------------------------------------------------------
+// 19. Bitbucket — Atlassian code hosting
+// --------------------------------------------------------------------------
+const BB_PRESETS: Preset[] = [
+  { id: "bb-cpp", label: "C++ системы", hint: "embedded, kernel", values: { query: "C++ embedded" } },
+  { id: "bb-go", label: "Go backend", hint: "microservices", values: { query: "Go backend" } },
+  { id: "bb-rust", label: "Rust", hint: "системное", values: { query: "Rust systems" } },
+  { id: "bb-python", label: "Python infra", hint: "infrastructure", values: { query: "Python infrastructure" } },
+];
+
+function buildBitbucketUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://bitbucket.org/search?q=${q}`;
+}
+
+const BB_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Rust, Python..." },
+];
+
+// --------------------------------------------------------------------------
+// 20. Kaggle — data science / ML profiles
+// --------------------------------------------------------------------------
+const KG_PRESETS: Preset[] = [
+  { id: "kg-python", label: "Python data", hint: "ML, data", values: { query: "Python data science" } },
+  { id: "kg-cpp", label: "C++ ML", hint: "performance", values: { query: "C++ machine learning" } },
+  { id: "kg-pg", label: "PostgreSQL", hint: "databases", values: { query: "PostgreSQL" } },
+  { id: "kg-linux", label: "Linux systems", hint: "systems", values: { query: "Linux systems" } },
+];
+
+function buildKaggleUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.kaggle.com/search?q=${q}`;
+}
+
+const KG_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "Python, C++, PostgreSQL..." },
+];
+
+// --------------------------------------------------------------------------
+// 21. Docker Hub — infrastructure / DevOps
+// --------------------------------------------------------------------------
+const DH_PRESETS: Preset[] = [
+  { id: "dh-pg", label: "PostgreSQL", hint: "БД", values: { query: "postgres" } },
+  { id: "dh-redis", label: "Redis", hint: "кэш", values: { query: "redis" } },
+  { id: "dh-nginx", label: "Nginx", hint: "proxy", values: { query: "nginx" } },
+  { id: "dh-kafka", label: "Kafka", hint: "СРК", values: { query: "kafka" } },
+  { id: "dh-linux", label: "Linux", hint: "OS", values: { query: "linux" } },
+];
+
+function buildDockerhubUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://hub.docker.com/search?q=${q}`;
+}
+
+const DH_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "postgres, redis, nginx, kafka..." },
+];
+
+// --------------------------------------------------------------------------
+// 22. pkg.go.dev — Go package authors
+// --------------------------------------------------------------------------
+const GOPKG_PRESETS: Preset[] = [
+  { id: "gopkg-pg", label: "PostgreSQL", hint: "БД", values: { query: "postgres" } },
+  { id: "gopkg-kafka", label: "Kafka", hint: "СРК", values: { query: "kafka" } },
+  { id: "gopkg-grpc", label: "gRPC", hint: "networking", values: { query: "grpc" } },
+  { id: "gopkg-linux", label: "Linux/syscall", hint: "системное", values: { query: "syscall linux" } },
+];
+
+function buildGopkgUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://pkg.go.dev/search?q=${q}`;
+}
+
+const GOPKG_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "postgres, kafka, grpc..." },
+];
+
+// --------------------------------------------------------------------------
+// 23. crates.io — Rust package authors
+// --------------------------------------------------------------------------
+const CRATES_PRESETS: Preset[] = [
+  { id: "crates-linux", label: "Linux", hint: "системное", values: { query: "linux" } },
+  { id: "crates-db", label: "Database", hint: "БД", values: { query: "database" } },
+  { id: "crates-net", label: "Networking", hint: "сеть", values: { query: "networking" } },
+  { id: "crates-cli", label: "CLI", hint: "утилиты", values: { query: "cli" } },
+];
+
+function buildCratesUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://crates.io/search?q=${q}`;
+}
+
+const CRATES_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "linux, database, networking..." },
+];
+
+// --------------------------------------------------------------------------
+// 24. PyPI — Python package authors
+// --------------------------------------------------------------------------
+const PYPI_PRESETS: Preset[] = [
+  { id: "pypi-pg", label: "PostgreSQL", hint: "БД", values: { query: "postgres" } },
+  { id: "pypi-linux", label: "Linux/system", hint: "системное", values: { query: "linux system" } },
+  { id: "pypi-async", label: "AsyncIO", hint: "async", values: { query: "asyncio" } },
+  { id: "pypi-ctypes", label: "ctypes/C", hint: "C bindings", values: { query: "ctypes" } },
+];
+
+function buildPypiUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://pypi.org/search/?q=${q}`;
+}
+
+const PYPI_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "postgres, linux, asyncio..." },
+];
+
+// --------------------------------------------------------------------------
+// 25. Codeberg — open source code hosting
+// --------------------------------------------------------------------------
+const CB_PRESETS: Preset[] = [
+  { id: "cb-c", label: "C проекты", hint: "системное", values: { query: "C linux" } },
+  { id: "cb-go", label: "Go проекты", hint: "CLI, сервисы", values: { query: "Go cli" } },
+  { id: "cb-rust", label: "Rust проекты", hint: "системное", values: { query: "Rust systems" } },
+  { id: "cb-kernel", label: "Linux kernel", hint: "ядро", values: { query: "linux kernel" } },
+];
+
+function buildCodebergUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://codeberg.org/explore/repos?q=${q}`;
+}
+
+const CB_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C, Go, Rust, Linux..." },
+];
+
+// --------------------------------------------------------------------------
+// 26. LeetCode — coding profiles via Google x-ray
+// --------------------------------------------------------------------------
+const LC_PRESETS: Preset[] = [
+  { id: "lc-cpp", label: "C++ программист", hint: "Google x-ray", values: { query: "C++ Russia" } },
+  { id: "lc-go", label: "Go программист", hint: "Google x-ray", values: { query: "Go developer Russia" } },
+  { id: "lc-python", label: "Python программист", hint: "Google x-ray", values: { query: "Python developer Russia" } },
+  { id: "lc-rust", label: "Rust программист", hint: "Google x-ray", values: { query: "Rust developer" } },
+];
+
+function buildLeetcodeUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:leetcode.com+${q}`;
+}
+
+const LC_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Python, Rust..." },
+];
+
+// --------------------------------------------------------------------------
+// 27. Medium — tech articles & profiles
+// --------------------------------------------------------------------------
+const MED_PRESETS: Preset[] = [
+  { id: "med-cpp", label: "C++ systems", hint: "системное ПО", values: { query: "C++ systems programming" } },
+  { id: "med-go", label: "Go backend", hint: "highload", values: { query: "Go backend highload" } },
+  { id: "med-rust", label: "Rust systems", hint: "системное", values: { query: "Rust systems programming" } },
+  { id: "med-linux", label: "Linux kernel", hint: "ядро", values: { query: "Linux kernel development" } },
+  { id: "med-db", label: "Базы данных", hint: "PostgreSQL, СУБД", values: { query: "database PostgreSQL internals" } },
+];
+
+function buildMediumUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://medium.com/search?q=${q}`;
+}
+
+const MED_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Rust, Linux..." },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -1121,6 +1353,146 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: SH_PRESETS,
     buildUrl: buildSourcehutUrl,
     summarize: (v) => summarizeValues(v, SH_FIELDS),
+  },
+  hackersnews: {
+    id: "hackersnews",
+    name: "HackerNews",
+    tagline: "news.ycombinator.com · дискуссии",
+    description:
+      "HackerNews — главное англоязычное dev-сообщество. Поиск по обсуждениям, тредам «Ask HN: Who is hiring?» и профилям. Активные комментаторы — опытные инженеры.",
+    accent: "from-orange-500 to-amber-600",
+    iconKey: "globe",
+    sourceTag: "hackersnews",
+    fields: HN_FIELDS,
+    presets: HN_PRESETS,
+    buildUrl: buildHnUrl,
+    summarize: (v) => summarizeValues(v, HN_FIELDS),
+  },
+  bitbucket: {
+    id: "bitbucket",
+    name: "Bitbucket",
+    tagline: "bitbucket.org · Atlassian",
+    description:
+      "Bitbucket — платформа хостинга кода от Atlassian. Поиск репозиториев C, C++, Go, Rust. Enterprise-проекты и интеграция с Jira.",
+    accent: "from-blue-500 to-sky-600",
+    iconKey: "github",
+    sourceTag: "bitbucket",
+    fields: BB_FIELDS,
+    presets: BB_PRESETS,
+    buildUrl: buildBitbucketUrl,
+    summarize: (v) => summarizeValues(v, BB_FIELDS),
+  },
+  kaggle: {
+    id: "kaggle",
+    name: "Kaggle",
+    tagline: "kaggle.com · Data Science",
+    description:
+      "Kaggle — платформа для data science и ML. Поиск профилей дата-сайентистов, Python-разработчиков и инженеров баз данных.",
+    accent: "from-sky-500 to-blue-600",
+    iconKey: "book",
+    sourceTag: "kaggle",
+    fields: KG_FIELDS,
+    presets: KG_PRESETS,
+    buildUrl: buildKaggleUrl,
+    summarize: (v) => summarizeValues(v, KG_FIELDS),
+  },
+  dockerhub: {
+    id: "dockerhub",
+    name: "Docker Hub",
+    tagline: "hub.docker.com · DevOps",
+    description:
+      "Docker Hub — реестр контейнерных образов. Поиск по образам PostgreSQL, Redis, Kafka, Nginx. Авторы образов — DevOps и инфраструктурные инженеры.",
+    accent: "from-blue-500 to-cyan-600",
+    iconKey: "terminal",
+    sourceTag: "dockerhub",
+    fields: DH_FIELDS,
+    presets: DH_PRESETS,
+    buildUrl: buildDockerhubUrl,
+    summarize: (v) => summarizeValues(v, DH_FIELDS),
+  },
+  gopkg: {
+    id: "gopkg",
+    name: "pkg.go.dev",
+    tagline: "Go-пакеты · авторы",
+    description:
+      "pkg.go.dev — реестр Go-пакетов. Поиск авторов пакетов для PostgreSQL, Kafka, gRPC, системного программирования. Авторы — опытные Go-разработчики.",
+    accent: "from-cyan-500 to-teal-600",
+    iconKey: "terminal",
+    sourceTag: "gopkg",
+    fields: GOPKG_FIELDS,
+    presets: GOPKG_PRESETS,
+    buildUrl: buildGopkgUrl,
+    summarize: (v) => summarizeValues(v, GOPKG_FIELDS),
+  },
+  crates: {
+    id: "crates",
+    name: "crates.io",
+    tagline: "Rust-пакеты · авторы",
+    description:
+      "crates.io — реестр Rust-пакетов. Поиск авторов пакетов для Linux, баз данных, сетевого программирования. Авторы — Rust-разработчики.",
+    accent: "from-orange-500 to-red-600",
+    iconKey: "terminal",
+    sourceTag: "crates",
+    fields: CRATES_FIELDS,
+    presets: CRATES_PRESETS,
+    buildUrl: buildCratesUrl,
+    summarize: (v) => summarizeValues(v, CRATES_FIELDS),
+  },
+  pypi: {
+    id: "pypi",
+    name: "PyPI",
+    tagline: "pypi.org · Python-пакеты",
+    description:
+      "PyPI — реестр Python-пакетов. Поиск авторов пакетов для PostgreSQL, Linux, asyncio, C bindings. Авторы — Python-разработчики с системной экспертизой.",
+    accent: "from-blue-500 to-indigo-600",
+    iconKey: "terminal",
+    sourceTag: "pypi",
+    fields: PYPI_FIELDS,
+    presets: PYPI_PRESETS,
+    buildUrl: buildPypiUrl,
+    summarize: (v) => summarizeValues(v, PYPI_FIELDS),
+  },
+  codeberg: {
+    id: "codeberg",
+    name: "Codeberg",
+    tagline: "codeberg.org · open source",
+    description:
+      "Codeberg — некоммерческая платформа хостинга кода (Gitea). Популярна среди open-source разработчиков C, Go, Rust. Поиск проектов по языку.",
+    accent: "from-teal-500 to-cyan-700",
+    iconKey: "github",
+    sourceTag: "codeberg",
+    fields: CB_FIELDS,
+    presets: CB_PRESETS,
+    buildUrl: buildCodebergUrl,
+    summarize: (v) => summarizeValues(v, CB_FIELDS),
+  },
+  leetcode: {
+    id: "leetcode",
+    name: "LeetCode",
+    tagline: "leetcode.com · алгоритмика",
+    description:
+      "LeetCode — платформа для подготовки к алгоритмическим собеседованиям. Google x-ray поиск профилей по языку и региону. Сильные алгоритмисты.",
+    accent: "from-amber-500 to-yellow-600",
+    iconKey: "terminal",
+    sourceTag: "leetcode",
+    fields: LC_FIELDS,
+    presets: LC_PRESETS,
+    buildUrl: buildLeetcodeUrl,
+    summarize: (v) => summarizeValues(v, LC_FIELDS),
+  },
+  medium: {
+    id: "medium",
+    name: "Medium",
+    tagline: "medium.com · статьи",
+    description:
+      "Medium — платформа статей. Технические статьи про C++, Go, Rust, Linux kernel, базы данных. Авторы — опытные инженеры, доступные для контакта.",
+    accent: "from-slate-500 to-gray-700",
+    iconKey: "book",
+    sourceTag: "medium",
+    fields: MED_FIELDS,
+    presets: MED_PRESETS,
+    buildUrl: buildMediumUrl,
+    summarize: (v) => summarizeValues(v, MED_FIELDS),
   },
 };
 
