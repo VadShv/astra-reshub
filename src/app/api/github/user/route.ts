@@ -11,6 +11,21 @@ interface CacheEntry {
 }
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL = 10 * 60 * 1000;
+const MAX_CACHE_SIZE = 500;
+
+function evictCache() {
+  if (cache.size <= MAX_CACHE_SIZE) return;
+  const now = Date.now();
+  for (const [key, entry] of cache) {
+    if (now - entry.ts > CACHE_TTL) cache.delete(key);
+  }
+  if (cache.size > MAX_CACHE_SIZE) {
+    const oldest = [...cache.entries()].sort((a, b) => a[1].ts - b[1].ts);
+    for (let i = 0; i < oldest.length - MAX_CACHE_SIZE; i++) {
+      cache.delete(oldest[i][0]);
+    }
+  }
+}
 
 // Fetch a single GitHub user's full profile (bio, location, company, email...).
 export async function GET(req: NextRequest) {
@@ -96,10 +111,11 @@ export async function GET(req: NextRequest) {
     };
 
     cache.set(login, { data: profile, ts: Date.now(), status: 200 });
+    evictCache();
     return NextResponse.json(profile);
-  } catch (e: any) {
+  } catch {
     return NextResponse.json(
-      { error: "Не удалось связаться с GitHub.", detail: e?.message },
+      { error: "Не удалось связаться с GitHub." },
       { status: 502 }
     );
   }

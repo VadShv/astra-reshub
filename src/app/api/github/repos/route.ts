@@ -9,6 +9,21 @@ interface CacheEntry {
 }
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL = 10 * 60 * 1000;
+const MAX_CACHE_SIZE = 500;
+
+function evictCache() {
+  if (cache.size <= MAX_CACHE_SIZE) return;
+  const now = Date.now();
+  for (const [key, entry] of cache) {
+    if (now - entry.ts > CACHE_TTL) cache.delete(key);
+  }
+  if (cache.size > MAX_CACHE_SIZE) {
+    const oldest = [...cache.entries()].sort((a, b) => a[1].ts - b[1].ts);
+    for (let i = 0; i < oldest.length - MAX_CACHE_SIZE; i++) {
+      cache.delete(oldest[i][0]);
+    }
+  }
+}
 
 // Fetch a user's public repositories (for profile analytics: languages,
 // stars, forks, activity over time). Paginated up to 100 per request; we fetch
@@ -107,10 +122,11 @@ export async function GET(req: NextRequest) {
       rateLimit,
     };
     cache.set(login, { data: payload, ts: Date.now() });
+    evictCache();
     return NextResponse.json(payload);
-  } catch (e: any) {
+  } catch {
     return NextResponse.json(
-      { error: "Не удалось связаться с GitHub.", detail: e?.message },
+      { error: "Не удалось связаться с GitHub." },
       { status: 502 }
     );
   }

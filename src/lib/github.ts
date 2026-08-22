@@ -335,7 +335,6 @@ export function buildQuery(filters: SearchFilters): string {
   // Issues state
   if (filters.state) parts.push(`state:${filters.state}`);
   if (filters.type === "issues") parts.push(`is:issue`);
-  if (filters.type === "commits") parts.push(`hash:`); // commits need a query term
 
   return parts.filter(Boolean).join(" ");
 }

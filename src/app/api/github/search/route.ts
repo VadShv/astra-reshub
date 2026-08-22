@@ -8,6 +8,21 @@ interface CacheEntry {
 }
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL = 60 * 1000; // 60 seconds
+const MAX_CACHE_SIZE = 500;
+
+function evictCache() {
+  if (cache.size <= MAX_CACHE_SIZE) return;
+  const now = Date.now();
+  for (const [key, entry] of cache) {
+    if (now - entry.ts > CACHE_TTL) cache.delete(key);
+  }
+  if (cache.size > MAX_CACHE_SIZE) {
+    const oldest = [...cache.entries()].sort((a, b) => a[1].ts - b[1].ts);
+    for (let i = 0; i < oldest.length - MAX_CACHE_SIZE; i++) {
+      cache.delete(oldest[i][0]);
+    }
+  }
+}
 
 const TYPE_TO_PATH: Record<SearchType, string> = {
   repositories: "repositories",
@@ -149,7 +164,7 @@ export async function GET(req: NextRequest) {
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       return NextResponse.json(
-        { error: `Ошибка GitHub API (${res.status}).`, detail: text },
+        { error: `Ошибка GitHub API (${res.status}).` },
         { status: res.status }
       );
     }
@@ -171,11 +186,12 @@ export async function GET(req: NextRequest) {
     };
 
     cache.set(cacheKey, { data: payload, ts: Date.now() });
+    evictCache();
 
     return NextResponse.json(payload);
-  } catch (e: any) {
+  } catch {
     return NextResponse.json(
-      { error: "Не удалось связаться с GitHub.", detail: e?.message },
+      { error: "Не удалось связаться с GitHub." },
       { status: 502 }
     );
   }

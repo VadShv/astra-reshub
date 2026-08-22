@@ -130,7 +130,6 @@ export const useSearchStore = create<SearchStore>()(
         saved: s.saved,
         type: s.type,
         perPage: s.perPage,
-        githubToken: s.githubToken,
       }),
     }
   )

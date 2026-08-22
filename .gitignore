@@ -50,5 +50,6 @@ test
 prompt
 
 server.log
+.zscripts/dev.pid
 # Skills directory
 /skills/

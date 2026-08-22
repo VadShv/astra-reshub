@@ -471,7 +471,7 @@ function buildSjUrl(v: Record<string, any>): string {
   const town = (v.town || "").trim();
   const params = new URLSearchParams();
   if (q) params.set("keywords", q);
-  if (town) params.set("town", town === "Россия" ? "4" : town === "Москва" ? "4" : town === "Санкт-Петербург" ? "53" : "");
+  if (town && town !== "Россия") params.set("town", town === "Москва" ? "4" : town === "Санкт-Петербург" ? "53" : "");
   return `https://www.superjob.ru/resume/?${params.toString()}`;
 }
 
