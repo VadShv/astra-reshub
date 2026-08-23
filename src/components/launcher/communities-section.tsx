@@ -39,14 +39,11 @@ const GROUPS: CommunityGroup[] = [
     accent: "from-amber-500 to-yellow-600",
     blurb: "Форумы и списки рассылки по Linux-дистрибутивам и ядру",
     links: [
-      { title: "Linux.org.ru", url: "https://www.linux.org.ru/", description: "Крупнейший RU-форум по Linux (есть в системах)", searchUrl: "https://www.linux.org.ru/search?q=" },
-      { title: "Ubuntu.ru форум", url: "https://forum.ubuntu.ru/", description: "RU-сообщество Ubuntu (есть в системах)", searchUrl: "https://forum.ubuntu.ru/index.php?action=search&keywords=" },
       { title: "Arch Linux (RU)", url: "https://bbs.archlinux.org.ru/", description: "Русскоязычный форум Arch Linux", searchUrl: "https://bbs.archlinux.org.ru/search.php?q=" },
       { title: "ALT Linux форум", url: "https://forum.altlinux.org/", description: "Отечественный дистрибутив, гос-сектор", searchUrl: "https://forum.altlinux.org/search?q=" },
       { title: "Gentoo forums", url: "https://forums.gentoo.org/", description: "Источник-дистрибутив, системные инженеры", searchUrl: "https://forums.gentoo.org/search.php?search_keywords=" },
       { title: "openSUSE forum", url: "https://forum.opensuse.org/", description: "Корпоративный SUSE, системное ПО", searchUrl: "https://forum.opensuse.org/search?q=" },
       { title: "LKML (lore.kernel.org)", url: "https://lore.kernel.org/lkml/", description: "Список рассылки ядра Linux — патчи, драйверы", searchUrl: "https://lore.kernel.org/lkml/?q=" },
-      { title: "OpenNET", url: "https://www.opennet.ru/", description: "UNIX/Linux портал (есть в системах)", searchUrl: "https://www.opennet.ru/search.cgi?sctxt=" },
     ],
   },
   {

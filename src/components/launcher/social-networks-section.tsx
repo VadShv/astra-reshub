@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Share2, ExternalLink, Search, Globe } from "lucide-react";
 import { CollapsibleSection } from "./collapsible-section";
-import { Input } from "@/components/ui/input";
 
 interface SocialNetwork {
   id: string;
@@ -160,20 +159,7 @@ function buildXrayUrl(xraySite: string): string {
 }
 
 export function SocialNetworksSection() {
-  const [query, setQuery] = React.useState("");
-
-  const filtered = React.useMemo(() => {
-    if (!query.trim()) return NETWORKS;
-    const q = query.toLowerCase();
-    return NETWORKS.filter(
-      (n) =>
-        n.name.toLowerCase().includes(q) ||
-        n.description.toLowerCase().includes(q)
-    );
-  }, [query]);
-
   const categories = ["russian", "international", "professional"];
-  const totalLinks = filtered.length;
 
   return (
     <CollapsibleSection
@@ -181,21 +167,11 @@ export function SocialNetworksSection() {
       iconAccent="from-purple-500 to-pink-600"
       title="Социальные сети"
       subtitle="Поиск разработчиков в соцсетях"
-      count={totalLinks}
+      count={NETWORKS.length}
     >
       <div className="space-y-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Фильтр по названию или описанию..."
-            className="pl-9"
-          />
-        </div>
-
         {categories.map((cat) => {
-          const items = filtered.filter((n) => n.category === cat);
+          const items = NETWORKS.filter((n) => n.category === cat);
           if (items.length === 0) return null;
           return (
             <div key={cat}>
@@ -264,12 +240,6 @@ export function SocialNetworksSection() {
             </div>
           );
         })}
-
-        {filtered.length === 0 && (
-          <div className="text-center py-8 text-sm text-muted-foreground">
-            Ничего не найдено по запросу «{query}»
-          </div>
-        )}
       </div>
     </CollapsibleSection>
   );

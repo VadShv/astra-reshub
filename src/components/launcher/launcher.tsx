@@ -22,6 +22,7 @@ import {
   Send,
   Plus,
   Book,
+  X,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -29,6 +30,7 @@ import { SYSTEMS_DOMAINS } from "@/lib/github";
 import { LINKEDIN_PRESETS } from "@/lib/linkedin";
 import { URL_SYSTEMS, UrlSystemId } from "@/lib/search-systems";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Input } from "@/components/ui/input";
 import { ResearchSection } from "./research-section";
 import { AggregatorsSection } from "./aggregators-section";
 import { CandidateAggregatorsSection } from "./candidate-aggregators-section";
@@ -616,9 +618,22 @@ export function Launcher() {
   const setApp = useUIStore((s) => s.setApp);
   const selectionCount = useSelectionStore((s) => s.candidates.length);
   const [suggestOpen, setSuggestOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const featured = SYSTEMS.find((s) => s.featured)!;
   const rest = SYSTEMS.filter((s) => !s.featured);
+
+  const isSearching = searchQuery.trim().length > 0;
+  const filteredRest = React.useMemo(() => {
+    if (!isSearching) return rest;
+    const q = searchQuery.toLowerCase();
+    return rest.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.tagline.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q)
+    );
+  }, [searchQuery, rest]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -665,8 +680,35 @@ export function Launcher() {
 
       {/* Main */}
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-4 pt-10 pb-10">
+        <div className="mx-auto max-w-6xl px-4 pt-6 pb-10">
+          {/* Global search */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Поиск системы: GitLab, Хабр, Docker, Reddit..."
+              className="pl-10 pr-10 h-12 rounded-xl text-base"
+            />
+            {isSearching && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          {isSearching && (
+            <div className="mb-4 text-sm text-muted-foreground">
+              Найдено систем: <span className="font-semibold text-foreground">{filteredRest.length}</span>
+              {filteredRest.length === 0 && " — попробуйте другой запрос"}
+            </div>
+          )}
+
           {/* Hero */}
+          {!isSearching && (
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -685,8 +727,10 @@ export function Launcher() {
               Единая выборка и экспорт в ХАНТ для всех источников.
             </p>
           </div>
+          )}
 
           {/* Featured system (CSE) */}
+          {!isSearching && (
           <div className="mb-5">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2.5">
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
@@ -729,10 +773,11 @@ export function Launcher() {
               </div>
             </button>
           </div>
+          )}
 
           {/* Other systems grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {rest.map((sys) => (
+            {filteredRest.map((sys) => (
               <button
                 key={sys.id}
                 onClick={() => setApp(sys.id)}
@@ -777,6 +822,8 @@ export function Launcher() {
           </div>
 
           {/* Quick presets preview */}
+          {!isSearching && (
+          <>
           <div className="mt-10">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3 justify-center">
               <Sparkles className="h-3.5 w-3.5" />
@@ -848,6 +895,8 @@ export function Launcher() {
 
           {/* Suggested tools — user-submitted tools */}
           <SuggestedToolsSection />
+          </>
+          )}
         </div>
       </main>
 
