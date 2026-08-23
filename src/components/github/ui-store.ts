@@ -32,7 +32,9 @@ export type AppId =
   | "pypi"
   | "codeberg"
   | "leetcode"
-  | "medium";
+  | "medium"
+  | "vk"
+  | "facebook";
 
 interface UIStore {
   // Which search system / view is active.

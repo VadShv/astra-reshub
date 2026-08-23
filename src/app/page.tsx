@@ -39,5 +39,7 @@ export default function Home() {
   if (activeApp === "codeberg") return <UrlSearchApp systemId="codeberg" />;
   if (activeApp === "leetcode") return <UrlSearchApp systemId="leetcode" />;
   if (activeApp === "medium") return <UrlSearchApp systemId="medium" />;
+  if (activeApp === "vk") return <UrlSearchApp systemId="vk" />;
+  if (activeApp === "facebook") return <UrlSearchApp systemId="facebook" />;
   return <Launcher />;
 }

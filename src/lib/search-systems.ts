@@ -89,7 +89,9 @@ export type UrlSystemId =
   | "pypi"
   | "codeberg"
   | "leetcode"
-  | "medium";
+  | "medium"
+  | "vk"
+  | "facebook";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -1112,6 +1114,46 @@ const MED_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 28. VK — ВКонтакте (Google x-ray)
+// --------------------------------------------------------------------------
+const VK_PRESETS: Preset[] = [
+  { id: "vk-cpp", label: "C++ разработчик", hint: "site:vk.com", values: { query: "C++ разработчик" } },
+  { id: "vk-go", label: "Go разработчик", hint: "site:vk.com", values: { query: "Go разработчик" } },
+  { id: "vk-python", label: "Python разработчик", hint: "site:vk.com", values: { query: "Python разработчик" } },
+  { id: "vk-linux", label: "Linux администратор", hint: "site:vk.com", values: { query: "Linux администратор" } },
+  { id: "vk-devops", label: "DevOps инженер", hint: "site:vk.com", values: { query: "DevOps инженер" } },
+];
+
+function buildVkUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:vk.com+${q}`;
+}
+
+const VK_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ разработчик, Go, Python..." },
+];
+
+// --------------------------------------------------------------------------
+// 29. Facebook (Google x-ray)
+// --------------------------------------------------------------------------
+const FB_PRESETS: Preset[] = [
+  { id: "fb-cpp", label: "C++ developer", hint: "site:facebook.com", values: { query: "C++ developer" } },
+  { id: "fb-go", label: "Go developer", hint: "site:facebook.com", values: { query: "Go developer" } },
+  { id: "fb-python", label: "Python developer", hint: "site:facebook.com", values: { query: "Python developer" } },
+  { id: "fb-rust", label: "Rust developer", hint: "site:facebook.com", values: { query: "Rust developer" } },
+  { id: "fb-linux", label: "Linux engineer", hint: "site:facebook.com", values: { query: "Linux engineer" } },
+];
+
+function buildFacebookUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:facebook.com+${q}`;
+}
+
+const FB_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++ developer, Go, Python..." },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -1493,6 +1535,34 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: MED_PRESETS,
     buildUrl: buildMediumUrl,
     summarize: (v) => summarizeValues(v, MED_FIELDS),
+  },
+  vk: {
+    id: "vk",
+    name: "ВКонтакте",
+    tagline: "vk.com · Google x-ray",
+    description:
+      "ВКонтакте — крупнейшая российская соцсеть. Google x-ray поиск профилей и групп разработчиков C, C++, Go, Python, Rust, DevOps.",
+    accent: "from-blue-500 to-indigo-600",
+    iconKey: "globe",
+    sourceTag: "vk",
+    fields: VK_FIELDS,
+    presets: VK_PRESETS,
+    buildUrl: buildVkUrl,
+    summarize: (v) => summarizeValues(v, VK_FIELDS),
+  },
+  facebook: {
+    id: "facebook",
+    name: "Facebook",
+    tagline: "facebook.com · Google x-ray",
+    description:
+      "Facebook — международная соцсеть. Google x-ray поиск профилей разработчиков C++, Go, Python, Rust, Linux engineer.",
+    accent: "from-blue-600 to-sky-700",
+    iconKey: "globe",
+    sourceTag: "facebook",
+    fields: FB_FIELDS,
+    presets: FB_PRESETS,
+    buildUrl: buildFacebookUrl,
+    summarize: (v) => summarizeValues(v, FB_FIELDS),
   },
 };
 

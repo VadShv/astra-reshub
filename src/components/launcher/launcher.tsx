@@ -36,6 +36,7 @@ import { CommunitiesSection } from "./communities-section";
 import { ExtensionsSection } from "./extensions-section";
 import { SuggestToolDialog } from "./suggest-tool-dialog";
 import { SuggestedToolsSection } from "./suggested-tools-section";
+import { SocialNetworksSection } from "./social-networks-section";
 
 interface SystemCard {
   id: AppId;
@@ -573,6 +574,42 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "vk",
+    name: "ВКонтакте",
+    tagline: "vk.com · Google x-ray",
+    description:
+      "ВКонтакте — крупнейшая российская соцсеть. Google x-ray поиск профилей и групп разработчиков C, C++, Go, Python, Rust, DevOps.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-blue-500 to-indigo-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:vk.com" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Linux, DevOps" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "ВКонтакте" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "facebook",
+    name: "Facebook",
+    tagline: "facebook.com · Google x-ray",
+    description:
+      "Facebook — международная соцсеть. Google x-ray поиск профилей разработчиков C++, Go, Python, Rust, Linux engineer.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-blue-600 to-sky-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:facebook.com" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust, Linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Facebook" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
 ];
 
 export function Launcher() {
@@ -633,7 +670,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              29 поисковых систем в одном месте
+              31 поисковая система в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}
@@ -802,6 +839,9 @@ export function Launcher() {
 
           {/* Communities section — niche forums by domain */}
           <CommunitiesSection />
+
+          {/* Social networks section */}
+          <SocialNetworksSection />
 
           {/* Research section — study new APIs */}
           <ResearchSection />

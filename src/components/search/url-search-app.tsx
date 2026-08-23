@@ -826,6 +826,10 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: C++, Go, Python, Rust";
     case "medium":
       return "Например: C++, Go, Rust, Linux";
+    case "vk":
+      return "Например: C++ разработчик, Go, Python";
+    case "facebook":
+      return "Например: C++ developer, Go, Python";
     default:
       return "Введите запрос...";
   }
@@ -887,6 +891,10 @@ function getHint(systemId: UrlSystemId): string {
       return "Google x-ray по LeetCode. Профили алгоритмистов добавляйте в выборку.";
     case "medium":
       return "Поиск статей на Medium. Авторов технических статей добавляйте в выборку.";
+    case "vk":
+      return "Google x-ray по ВКонтакте (site:vk.com). Профили и группы разработчиков добавляйте в выборку.";
+    case "facebook":
+      return "Google x-ray по Facebook (site:facebook.com). Профили разработчиков добавляйте в выборку.";
     default:
       return "Откройте ссылку в браузере и добавляйте кандидатов в выборку.";
   }
