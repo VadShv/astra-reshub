@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,8 @@ function evictCache() {
 
 // Fetch a single GitHub user's full profile (bio, location, company, email...).
 export async function GET(req: NextRequest) {
+  const limited = rateLimit(req);
+  if (limited) return limited;
   const { searchParams } = new URL(req.url);
   const login = searchParams.get("login");
   if (!login) {

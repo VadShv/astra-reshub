@@ -35,6 +35,7 @@ export interface Candidate {
   // Recruiter metadata
   note?: string;
   status: CandidateStatus;
+  statusChangedAt?: number;
   position?: string; // desired/target position (recruiter fills)
   tags?: string[];
   addedAt: number;
@@ -75,7 +76,7 @@ export const useSelectionStore = create<SelectionStore>()(
       setStatus: (login, status) =>
         set((s) => ({
           candidates: s.candidates.map((x) =>
-            x.login === login ? { ...x, status } : x
+            x.login === login ? { ...x, status, statusChangedAt: Date.now() } : x
           ),
         })),
       setNote: (login, note) =>

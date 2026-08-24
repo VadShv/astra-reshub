@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildQuery, SearchFilters, SearchType } from "@/lib/github";
+import { rateLimit } from "@/lib/rate-limit";
 
 // In-memory cache to respect GitHub rate limits and speed up repeat queries.
 interface CacheEntry {
@@ -36,6 +37,9 @@ const TYPE_TO_PATH: Record<SearchType, string> = {
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  const limited = rateLimit(req);
+  if (limited) return limited;
+
   const { searchParams } = new URL(req.url);
 
   const type = (searchParams.get("type") || "repositories") as SearchType;

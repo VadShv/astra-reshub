@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,8 @@ function evictCache() {
 // up to 4 pages (400 repos) which is enough for a meaningful dashboard while
 // staying within rate limits.
 export async function GET(req: NextRequest) {
+  const limited = rateLimit(req);
+  if (limited) return limited;
   const { searchParams } = new URL(req.url);
   const login = searchParams.get("login");
   if (!login) {

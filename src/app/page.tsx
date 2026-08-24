@@ -5,6 +5,9 @@ import { Launcher } from "@/components/launcher/launcher";
 import { GitFindApp } from "@/components/github/gitfind-app";
 import { LinkedInApp } from "@/components/linkedin/linkedin-app";
 import { UrlSearchApp } from "@/components/search/url-search-app";
+import { KanbanBoard } from "@/components/github/kanban-board";
+import { RecruiterDashboard } from "@/components/github/recruiter-dashboard";
+import { MetaSearch } from "@/components/github/meta-search";
 
 export default function Home() {
   const activeApp = useUIStore((s) => s.activeApp);
@@ -54,5 +57,8 @@ export default function Home() {
   if (activeApp === "grepapp") return <UrlSearchApp systemId="grepapp" />;
   if (activeApp === "lobsters") return <UrlSearchApp systemId="lobsters" />;
   if (activeApp === "dreamjob") return <UrlSearchApp systemId="dreamjob" />;
+  if (activeApp === "kanban") return <KanbanBoard />;
+  if (activeApp === "dashboard") return <RecruiterDashboard />;
+  if (activeApp === "metasearch") return <MetaSearch />;
   return <Launcher />;
 }

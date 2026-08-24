@@ -24,6 +24,8 @@ import {
   Book,
   X,
   Crown,
+  LayoutGrid,
+  BarChart3,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -852,6 +854,31 @@ export function Launcher() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setApp("metasearch")}
+              className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+            >
+              <Search className="h-3.5 w-3.5 text-primary" />
+              <span className="hidden md:inline">Мета-поиск</span>
+            </button>
+            {selectionCount > 0 && (
+              <>
+                <button
+                  onClick={() => setApp("kanban")}
+                  className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+                >
+                  <LayoutGrid className="h-3.5 w-3.5 text-violet-500" />
+                  <span className="hidden md:inline">Kanban</span>
+                </button>
+                <button
+                  onClick={() => setApp("dashboard")}
+                  className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+                >
+                  <BarChart3 className="h-3.5 w-3.5 text-emerald-500" />
+                  <span className="hidden md:inline">Дашборд</span>
+                </button>
+              </>
+            )}
             <button
               onClick={() => setPaidOnly((v) => !v)}
               className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all ${

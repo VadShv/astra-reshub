@@ -47,7 +47,10 @@ export type AppId =
   | "sourcegraph"
   | "grepapp"
   | "lobsters"
-  | "dreamjob";
+  | "dreamjob"
+  | "kanban"
+  | "dashboard"
+  | "metasearch";
 
 interface UIStore {
   // Which search system / view is active.
