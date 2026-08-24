@@ -94,7 +94,17 @@ export type UrlSystemId =
   | "facebook"
   | "yandex"
   | "bing"
-  | "ddg";
+  | "ddg"
+  | "zarplata"
+  | "rabota"
+  | "habrfreelance"
+  | "flru"
+  | "hackerrank"
+  | "codewars"
+  | "sourcegraph"
+  | "grepapp"
+  | "lobsters"
+  | "dreamjob";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -1238,6 +1248,164 @@ const DDG_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 33-42: Российские джобборды, фриланс, кодинг-платформы, поиск кода
+// --------------------------------------------------------------------------
+
+// 33. Зарплата.ру
+const ZARPLATA_PRESETS: Preset[] = [
+  { id: "zp-cpp", label: "C++ разработчик", hint: "site:zarplata.ru/resume", values: { query: '"C++ разработчик"', site: "zarplata.ru/resume" } },
+  { id: "zp-go", label: "Go разработчик", hint: "site:zarplata.ru/resume", values: { query: '"Go разработчик"', site: "zarplata.ru/resume" } },
+  { id: "zp-python", label: "Python разработчик", hint: "site:zarplata.ru/resume", values: { query: '"Python разработчик"', site: "zarplata.ru/resume" } },
+  { id: "zp-devops", label: "DevOps инженер", hint: "site:zarplata.ru/resume", values: { query: '"DevOps инженер"', site: "zarplata.ru/resume" } },
+  { id: "zp-linux", label: "Linux администратор", hint: "site:zarplata.ru/resume", values: { query: '"Linux администратор"', site: "zarplata.ru/resume" } },
+];
+function buildZarplataUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:zarplata.ru/resume+${q}`;
+}
+const ZARPLATA_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ разработчик", Go, Python...' },
+];
+
+// 34. Работа.ру
+const RABOTA_PRESETS: Preset[] = [
+  { id: "rb-cpp", label: "C++ разработчик", hint: "site:rabota.ru", values: { query: '"C++ разработчик" резюме', site: "rabota.ru" } },
+  { id: "rb-go", label: "Go разработчик", hint: "site:rabota.ru", values: { query: '"Go разработчик" резюме', site: "rabota.ru" } },
+  { id: "rb-python", label: "Python разработчик", hint: "site:rabota.ru", values: { query: '"Python разработчик" резюме', site: "rabota.ru" } },
+  { id: "rb-rust", label: "Rust разработчик", hint: "site:rabota.ru", values: { query: '"Rust разработчик" резюме', site: "rabota.ru" } },
+  { id: "rb-linux", label: "Linux администратор", hint: "site:rabota.ru", values: { query: '"Linux администратор" резюме', site: "rabota.ru" } },
+];
+function buildRabotaUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:rabota.ru+${q}`;
+}
+const RABOTA_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ разработчик" резюме...' },
+];
+
+// 35. Хабр Фриланс
+const HABRFL_PRESETS: Preset[] = [
+  { id: "hf-cpp", label: "C++ разработчик", hint: "freelance.habr.com", values: { query: "C++" } },
+  { id: "hf-go", label: "Go разработчик", hint: "freelance.habr.com", values: { query: "Go" } },
+  { id: "hf-python", label: "Python разработчик", hint: "freelance.habr.com", values: { query: "Python" } },
+  { id: "hf-rust", label: "Rust разработчик", hint: "freelance.habr.com", values: { query: "Rust" } },
+  { id: "hf-linux", label: "Linux/DevOps", hint: "freelance.habr.com", values: { query: "Linux DevOps" } },
+];
+function buildHabrFlUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://freelance.habr.com/tasks?query=${q}`;
+}
+const HABRFL_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Python, Rust..." },
+];
+
+// 36. FL.ru
+const FLRU_PRESETS: Preset[] = [
+  { id: "fl-cpp", label: "C++ разработчик", hint: "site:fl.ru", values: { query: '"C++ разработчик"', site: "fl.ru" } },
+  { id: "fl-go", label: "Go разработчик", hint: "site:fl.ru", values: { query: '"Go разработчик"', site: "fl.ru" } },
+  { id: "fl-python", label: "Python разработчик", hint: "site:fl.ru", values: { query: '"Python разработчик"', site: "fl.ru" } },
+  { id: "fl-devops", label: "DevOps", hint: "site:fl.ru", values: { query: '"DevOps инженер"', site: "fl.ru" } },
+];
+function buildFlruUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:fl.ru+${q}`;
+}
+const FLRU_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ разработчик", Go, Python...' },
+];
+
+// 37. HackerRank
+const HR_PRESETS: Preset[] = [
+  { id: "hr-cpp", label: "C++ программист", hint: "site:hackerrank.com", values: { query: "C++ Russia", site: "hackerrank.com" } },
+  { id: "hr-go", label: "Go программист", hint: "site:hackerrank.com", values: { query: "Go developer Russia", site: "hackerrank.com" } },
+  { id: "hr-python", label: "Python программист", hint: "site:hackerrank.com", values: { query: "Python developer Russia", site: "hackerrank.com" } },
+  { id: "hr-rust", label: "Rust программист", hint: "site:hackerrank.com", values: { query: "Rust developer", site: "hackerrank.com" } },
+];
+function buildHackerrankUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:hackerrank.com+${q}`;
+}
+const HR_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Python, Rust..." },
+];
+
+// 38. Codewars
+const CW_PRESETS: Preset[] = [
+  { id: "cw-cpp", label: "C++ программист", hint: "site:codewars.com", values: { query: "C++ Russia", site: "codewars.com" } },
+  { id: "cw-go", label: "Go программист", hint: "site:codewars.com", values: { query: "Go developer Russia", site: "codewars.com" } },
+  { id: "cw-python", label: "Python программист", hint: "site:codewars.com", values: { query: "Python developer Russia", site: "codewars.com" } },
+  { id: "cw-rust", label: "Rust программист", hint: "site:codewars.com", values: { query: "Rust developer", site: "codewars.com" } },
+];
+function buildCodewarsUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:codewars.com+${q}`;
+}
+const CW_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "C++, Go, Python, Rust..." },
+];
+
+// 39. Sourcegraph
+const SG_PRESETS: Preset[] = [
+  { id: "sg-kernel", label: "Linux kernel", hint: "поиск по коду", values: { query: "linux kernel driver" } },
+  { id: "sg-db", label: "Database internals", hint: "поиск по коду", values: { query: "postgres database internals" } },
+  { id: "sg-driver", label: "Драйверы", hint: "поиск по коду", values: { query: "kernel driver linux" } },
+  { id: "sg-syscall", label: "Syscall", hint: "поиск по коду", values: { query: "syscall linux" } },
+];
+function buildSourcegraphUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://sourcegraph.com/search?q=${q}&patternType=literal`;
+}
+const SG_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "linux kernel, postgres, driver..." },
+];
+
+// 40. Grep.app
+const GA_PRESETS: Preset[] = [
+  { id: "ga-kernel", label: "Linux kernel", hint: "поиск по GitHub", values: { query: "linux kernel" } },
+  { id: "ga-pg", label: "PostgreSQL", hint: "поиск по GitHub", values: { query: "postgres" } },
+  { id: "ga-redis", label: "Redis", hint: "поиск по GitHub", values: { query: "redis" } },
+  { id: "ga-nginx", label: "Nginx", hint: "поиск по GitHub", values: { query: "nginx" } },
+];
+function buildGrepappUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://grep.app/search?q=${q}`;
+}
+const GA_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "linux kernel, postgres, redis..." },
+];
+
+// 41. Lobsters
+const LB_PRESETS: Preset[] = [
+  { id: "lb-linux", label: "Linux", hint: "обсуждения", values: { query: "linux" } },
+  { id: "lb-rust", label: "Rust", hint: "обсуждения", values: { query: "rust" } },
+  { id: "lb-go", label: "Go", hint: "обсуждения", values: { query: "go" } },
+  { id: "lb-db", label: "Базы данных", hint: "обсуждения", values: { query: "database" } },
+  { id: "lb-kernel", label: "Ядро", hint: "обсуждения", values: { query: "kernel" } },
+];
+function buildLobstersUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://lobste.rs/search?q=${q}&what=stories`;
+}
+const LB_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: "linux, rust, go, database..." },
+];
+
+// 42. Dream Job
+const DJ_PRESETS: Preset[] = [
+  { id: "dj-cpp", label: "C++ разработчик", hint: "site:dreamjob.ru", values: { query: '"C++ разработчик"', site: "dreamjob.ru" } },
+  { id: "dj-go", label: "Go разработчик", hint: "site:dreamjob.ru", values: { query: '"Go разработчик"', site: "dreamjob.ru" } },
+  { id: "dj-python", label: "Python разработчик", hint: "site:dreamjob.ru", values: { query: '"Python разработчик"', site: "dreamjob.ru" } },
+  { id: "dj-devops", label: "DevOps инженер", hint: "site:dreamjob.ru", values: { query: '"DevOps инженер"', site: "dreamjob.ru" } },
+];
+function buildDreamjobUrl(v: Record<string, any>): string {
+  const q = encodeURIComponent((v.query || "").trim());
+  return `https://www.google.com/search?q=site:dreamjob.ru+${q}`;
+}
+const DJ_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ разработчик", Go, Python...' },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -1689,6 +1857,76 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: DDG_PRESETS,
     buildUrl: buildDdgUrl,
     summarize: (v) => summarizeValues(v, DDG_FIELDS),
+  },
+  zarplata: {
+    id: "zarplata", name: "Зарплата.ру", tagline: "zarplata.ru · резюме",
+    description: "Зарплата.ру — российский джобборд. Google x-ray поиск резюме C++, Go, Python, DevOps, Linux разработчиков.",
+    accent: "from-green-500 to-emerald-600", iconKey: "globe", sourceTag: "zarplata",
+    fields: ZARPLATA_FIELDS, presets: ZARPLATA_PRESETS, buildUrl: buildZarplataUrl,
+    summarize: (v) => summarizeValues(v, ZARPLATA_FIELDS),
+  },
+  rabota: {
+    id: "rabota", name: "Работа.ру", tagline: "rabota.ru · резюме",
+    description: "Работа.ру — российский джобборд. Google x-ray поиск резюме C++, Go, Python, Rust, Linux разработчиков.",
+    accent: "from-blue-500 to-indigo-600", iconKey: "globe", sourceTag: "rabota",
+    fields: RABOTA_FIELDS, presets: RABOTA_PRESETS, buildUrl: buildRabotaUrl,
+    summarize: (v) => summarizeValues(v, RABOTA_FIELDS),
+  },
+  habrfreelance: {
+    id: "habrfreelance", name: "Хабр Фриланс", tagline: "freelance.habr.com · фриланс",
+    description: "Хабр Фриланс — биржа фриланса от Хабра. Поиск задач и исполнителей C++, Go, Python, Rust, Linux/DevOps.",
+    accent: "from-violet-500 to-purple-600", iconKey: "globe", sourceTag: "habrfreelance",
+    fields: HABRFL_FIELDS, presets: HABRFL_PRESETS, buildUrl: buildHabrFlUrl,
+    summarize: (v) => summarizeValues(v, HABRFL_FIELDS),
+  },
+  flru: {
+    id: "flru", name: "FL.ru", tagline: "fl.ru · фриланс РФ",
+    description: "FL.ru — крупнейшая российская биржа фриланса. Google x-ray поиск профилей C++, Go, Python, DevOps разработчиков.",
+    accent: "from-orange-500 to-amber-600", iconKey: "globe", sourceTag: "flru",
+    fields: FLRU_FIELDS, presets: FLRU_PRESETS, buildUrl: buildFlruUrl,
+    summarize: (v) => summarizeValues(v, FLRU_FIELDS),
+  },
+  hackerrank: {
+    id: "hackerrank", name: "HackerRank", tagline: "hackerrank.com · алгоритмика",
+    description: "HackerRank — платформа алгоритмических задач. Google x-ray поиск профилей C++, Go, Python, Rust разработчиков.",
+    accent: "from-green-500 to-teal-600", iconKey: "terminal", sourceTag: "hackerrank",
+    fields: HR_FIELDS, presets: HR_PRESETS, buildUrl: buildHackerrankUrl,
+    summarize: (v) => summarizeValues(v, HR_FIELDS),
+  },
+  codewars: {
+    id: "codewars", name: "Codewars", tagline: "codewars.com · ката",
+    description: "Codewars — платформа кодинг-тренировок (ката). Google x-ray поиск профилей C++, Go, Python, Rust разработчиков.",
+    accent: "from-red-500 to-rose-600", iconKey: "terminal", sourceTag: "codewars",
+    fields: CW_FIELDS, presets: CW_PRESETS, buildUrl: buildCodewarsUrl,
+    summarize: (v) => summarizeValues(v, CW_FIELDS),
+  },
+  sourcegraph: {
+    id: "sourcegraph", name: "Sourcegraph", tagline: "sourcegraph.com · поиск по коду",
+    description: "Sourcegraph — поиск по коду across миллионов репозиториев. Находит разработчиков по их коду: kernel, DB internals, драйверы, syscall.",
+    accent: "from-indigo-500 to-blue-600", iconKey: "github", sourceTag: "sourcegraph",
+    fields: SG_FIELDS, presets: SG_PRESETS, buildUrl: buildSourcegraphUrl,
+    summarize: (v) => summarizeValues(v, SG_FIELDS),
+  },
+  grepapp: {
+    id: "grepapp", name: "Grep.app", tagline: "grep.app · поиск по GitHub",
+    description: "Grep.app — быстрый поиск по публичным GitHub-репозиториям. Находит разработчиков по конкретным паттернам кода.",
+    accent: "from-slate-500 to-gray-700", iconKey: "github", sourceTag: "grepapp",
+    fields: GA_FIELDS, presets: GA_PRESETS, buildUrl: buildGrepappUrl,
+    summarize: (v) => summarizeValues(v, GA_FIELDS),
+  },
+  lobsters: {
+    id: "lobsters", name: "Lobsters", tagline: "lobste.rs · computing community",
+    description: "Lobsters — computing-focused сообщество (аналог HackerNews). Обсуждения Linux, Rust, Go, баз данных, ядра. Активные авторы — инженеры.",
+    accent: "from-red-600 to-orange-700", iconKey: "globe", sourceTag: "lobsters",
+    fields: LB_FIELDS, presets: LB_PRESETS, buildUrl: buildLobstersUrl,
+    summarize: (v) => summarizeValues(v, LB_FIELDS),
+  },
+  dreamjob: {
+    id: "dreamjob", name: "Dream Job", tagline: "dreamjob.ru · джобборд РФ",
+    description: "Dream Job — российский джобборд с AI-матчингом. Google x-ray поиск резюме C++, Go, Python, DevOps разработчиков.",
+    accent: "from-cyan-500 to-blue-600", iconKey: "globe", sourceTag: "dreamjob",
+    fields: DJ_FIELDS, presets: DJ_PRESETS, buildUrl: buildDreamjobUrl,
+    summarize: (v) => summarizeValues(v, DJ_FIELDS),
   },
 };
 

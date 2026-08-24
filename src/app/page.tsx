@@ -44,5 +44,15 @@ export default function Home() {
   if (activeApp === "yandex") return <UrlSearchApp systemId="yandex" />;
   if (activeApp === "bing") return <UrlSearchApp systemId="bing" />;
   if (activeApp === "ddg") return <UrlSearchApp systemId="ddg" />;
+  if (activeApp === "zarplata") return <UrlSearchApp systemId="zarplata" />;
+  if (activeApp === "rabota") return <UrlSearchApp systemId="rabota" />;
+  if (activeApp === "habrfreelance") return <UrlSearchApp systemId="habrfreelance" />;
+  if (activeApp === "flru") return <UrlSearchApp systemId="flru" />;
+  if (activeApp === "hackerrank") return <UrlSearchApp systemId="hackerrank" />;
+  if (activeApp === "codewars") return <UrlSearchApp systemId="codewars" />;
+  if (activeApp === "sourcegraph") return <UrlSearchApp systemId="sourcegraph" />;
+  if (activeApp === "grepapp") return <UrlSearchApp systemId="grepapp" />;
+  if (activeApp === "lobsters") return <UrlSearchApp systemId="lobsters" />;
+  if (activeApp === "dreamjob") return <UrlSearchApp systemId="dreamjob" />;
   return <Launcher />;
 }

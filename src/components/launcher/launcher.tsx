@@ -666,6 +666,146 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "zarplata",
+    name: "Зарплата.ру",
+    tagline: "zarplata.ru · резюме",
+    description: "Российский джобборд. Google x-ray поиск резюме C++, Go, Python, DevOps, Linux разработчиков.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-green-500 to-emerald-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:zarplata.ru/resume" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, DevOps, Linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Зарплата.ру" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "rabota",
+    name: "Работа.ру",
+    tagline: "rabota.ru · резюме",
+    description: "Российский джобборд. Google x-ray поиск резюме C++, Go, Python, Rust, Linux разработчиков.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-blue-500 to-indigo-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:rabota.ru" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust, Linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Работа.ру" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "habrfreelance",
+    name: "Хабр Фриланс",
+    tagline: "freelance.habr.com · фриланс",
+    description: "Биржа фриланса от Хабра. Поиск задач и исполнителей C++, Go, Python, Rust, Linux/DevOps.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-violet-500 to-purple-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Прямой поиск задач" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust, Linux" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Хабр Фриланс" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "flru",
+    name: "FL.ru",
+    tagline: "fl.ru · фриланс РФ",
+    description: "Крупнейшая российская биржа фриланса. Google x-ray поиск профилей C++, Go, Python, DevOps.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-orange-500 to-amber-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:fl.ru" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, DevOps" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "FL.ru" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "hackerrank",
+    name: "HackerRank",
+    tagline: "hackerrank.com · алгоритмика",
+    description: "Платформа алгоритмических задач. Google x-ray поиск профилей C++, Go, Python, Rust разработчиков.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-green-500 to-teal-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:hackerrank.com" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "HackerRank" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "codewars",
+    name: "Codewars",
+    tagline: "codewars.com · ката",
+    description: "Платформа кодинг-тренировок (ката). Google x-ray поиск профилей C++, Go, Python, Rust разработчиков.",
+    icon: <Cpu className="h-7 w-7" />,
+    accent: "from-red-500 to-rose-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:codewars.com" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, Rust" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Codewars" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "sourcegraph",
+    name: "Sourcegraph",
+    tagline: "sourcegraph.com · поиск по коду",
+    description: "Поиск по коду across миллионов репозиториев. Находит разработчиков по их коду: kernel, DB, драйверы.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-indigo-500 to-blue-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по коду across миллионов репо" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: kernel, DB, driver, syscall" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Sourcegraph" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "grepapp",
+    name: "Grep.app",
+    tagline: "grep.app · поиск по GitHub",
+    description: "Быстрый поиск по публичным GitHub-репозиториям. Находит разработчиков по конкретным паттернам кода.",
+    icon: <Github className="h-7 w-7" />,
+    accent: "from-slate-500 to-gray-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по коду в GitHub-репозиториях" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: kernel, postgres, redis, nginx" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Grep.app" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "lobsters",
+    name: "Lobsters",
+    tagline: "lobste.rs · computing community",
+    description: "Computing-focused сообщество (аналог HackerNews). Обсуждения Linux, Rust, Go, баз данных, ядра.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-red-600 to-orange-700",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Поиск по обсуждениям" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: linux, rust, go, database, kernel" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Lobsters" }, { label: "Профиль", value: "URL-билдер" }],
+  },
+  {
+    id: "dreamjob",
+    name: "Dream Job",
+    tagline: "dreamjob.ru · джобборд РФ",
+    description: "Российский джобборд с AI-матчингом. Google x-ray поиск резюме C++, Go, Python, DevOps разработчиков.",
+    icon: <Briefcase className="h-7 w-7" />,
+    accent: "from-cyan-500 to-blue-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Google x-ray: site:dreamjob.ru" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: C++, Go, Python, DevOps" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [{ label: "Источник", value: "Dream Job" }, { label: "Профиль", value: "URL-билдер" }],
+  },
 ];
 
 export function Launcher() {
@@ -766,7 +906,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              34 поисковые системы в одном месте
+              44 поисковые системы в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}

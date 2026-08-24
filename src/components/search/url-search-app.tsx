@@ -836,6 +836,26 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return 'Например: "C++ developer" Russia';
     case "ddg":
       return 'Например: "C++ developer"';
+    case "zarplata":
+      return 'Например: "C++ разработчик"';
+    case "rabota":
+      return 'Например: "C++ разработчик" резюме';
+    case "habrfreelance":
+      return "Например: C++, Go, Python, Rust";
+    case "flru":
+      return 'Например: "C++ разработчик"';
+    case "hackerrank":
+      return "Например: C++ Russia, Go developer";
+    case "codewars":
+      return "Например: C++ Russia, Go developer";
+    case "sourcegraph":
+      return "Например: linux kernel, postgres, driver";
+    case "grepapp":
+      return "Например: linux kernel, postgres, redis";
+    case "lobsters":
+      return "Например: linux, rust, go, database";
+    case "dreamjob":
+      return 'Например: "C++ разработчик"';
     default:
       return "Введите запрос...";
   }
@@ -907,6 +927,26 @@ function getHint(systemId: UrlSystemId): string {
       return "X-ray через Bing — другой индекс, находит LinkedIn/GitHub/Facebook профили. Результаты добавляйте в выборку.";
     case "ddg":
       return "Приватный x-ray через DuckDuckGo (без трекинга). Профили разработчиков добавляйте в выборку.";
+    case "zarplata":
+      return "Google x-ray по Зарплата.ру (site:zarplata.ru/resume). Резюме разработчиков добавляйте в выборку.";
+    case "rabota":
+      return "Google x-ray по Работа.ру (site:rabota.ru). Резюме разработчиков добавляйте в выборку.";
+    case "habrfreelance":
+      return "Поиск задач на Хабр Фриланс. Профили фрилансеров добавляйте в выборку.";
+    case "flru":
+      return "Google x-ray по FL.ru (site:fl.ru). Профили фрилансеров добавляйте в выборку.";
+    case "hackerrank":
+      return "Google x-ray по HackerRank (site:hackerrank.com). Профили алгоритмистов добавляйте в выборку.";
+    case "codewars":
+      return "Google x-ray по Codewars (site:codewars.com). Профили разработчиков добавляйте в выборку.";
+    case "sourcegraph":
+      return "Поиск по коду на Sourcegraph. Авторов найденного кода добавляйте в выборку.";
+    case "grepapp":
+      return "Поиск по коду на Grep.app (публичные GitHub-репозитории). Авторов добавляйте в выборку.";
+    case "lobsters":
+      return "Поиск по Lobsters — computing-сообщество. Активных авторов добавляйте в выборку.";
+    case "dreamjob":
+      return "Google x-ray по Dream Job (site:dreamjob.ru). Резюме разработчиков добавляйте в выборку.";
     default:
       return "Откройте ссылку в браузере и добавляйте кандидатов в выборку.";
   }

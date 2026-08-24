@@ -37,7 +37,17 @@ export type AppId =
   | "facebook"
   | "yandex"
   | "bing"
-  | "ddg";
+  | "ddg"
+  | "zarplata"
+  | "rabota"
+  | "habrfreelance"
+  | "flru"
+  | "hackerrank"
+  | "codewars"
+  | "sourcegraph"
+  | "grepapp"
+  | "lobsters"
+  | "dreamjob";
 
 interface UIStore {
   // Which search system / view is active.

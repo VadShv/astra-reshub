@@ -9,6 +9,8 @@ import {
   HardDrive,
   Layers,
   Search,
+  Code,
+  Newspaper,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -92,6 +94,34 @@ const GROUPS: CommunityGroup[] = [
       { title: "Apache Flink", url: "https://flink.apache.org/community/", description: "Flink — stream processing, СРК", searchUrl: "https://flink.apache.org/community/" },
       { title: "Redis Streams (community)", url: "https://redis.io/community/", description: "Redis Streams — очереди и стримы", searchUrl: "https://redis.io/community/" },
       { title: "Apache Ignite", url: "https://ignite.apache.org/community/", description: "In-memory data grid, СРК", searchUrl: "https://ignite.apache.org/community/" },
+    ],
+  },
+  {
+    id: "programming",
+    title: "Программистские форумы",
+    icon: <Code className="h-5 w-5" />,
+    accent: "from-rose-500 to-pink-600",
+    blurb: "Русскоязычные форумы программистов — C/C++, Go, Python, Rust, БД",
+    links: [
+      { title: "CyberForum", url: "https://www.cyberforum.ru/", description: "Крупнейший RU-форум программистов (1.5M юзеров)", searchUrl: "https://www.cyberforum.ru/search.php?search_type=1&query=" },
+      { title: "SQL.ru", url: "https://www.sql.ru/forum/", description: "Форум по БД и программированию (PostgreSQL, Oracle, MySQL)", searchUrl: "https://www.sql.ru/forum/search.aspx?search=" },
+      { title: "RSDN", url: "https://www.rsdn.org/", description: "Russian Software Developers Network — статьи, форум" },
+      { title: "IXBT Forum", url: "https://forum.ixbt.com/", description: "Hardware/low-level tech форум — драйверы, железо", searchUrl: "https://forum.ixbt.com/search.cgi?id=1&search=" },
+      { title: "ProgrammersForum", url: "https://programmersforum.ru/", description: "Форум программистов — C++, Delphi, Python, Java", searchUrl: "https://programmersforum.ru/search.php?search_type=1&query=" },
+      { title: "Metanit", url: "https://metanit.com/", description: "Учебные материалы по C++, Go, Python, Rust — сообщество" },
+    ],
+  },
+  {
+    id: "media",
+    title: "Российские IT-медиа",
+    icon: <Newspaper className="h-5 w-5" />,
+    accent: "from-indigo-500 to-violet-600",
+    blurb: "Российские IT-издания — авторы статей про системное ПО, БД, безопасность",
+    links: [
+      { title: "TAdviser", url: "https://www.tadviser.ru/", description: "IT-бизнес, enterprise-технологии, цифровые платформы", searchUrl: "https://www.tadviser.ru/index.php/Поиск:" },
+      { title: "CNews", url: "https://www.cnews.ru/", description: "IT-новости, enterprise, инфраструктура, БД", searchUrl: "https://www.cnews.ru/search/?q=" },
+      { title: "Xakep", url: "https://xakep.ru/", description: "Security/hacker сообщество — low-level, реверсинг, C", searchUrl: "https://xakep.ru/?s=" },
+      { title: "3DNews", url: "https://3dnews.ru/", description: "Tech-новости, hardware, Linux, системное ПО", searchUrl: "https://3dnews.ru/search/?q=" },
     ],
   },
 ];
