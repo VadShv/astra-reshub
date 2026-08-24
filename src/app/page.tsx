@@ -8,6 +8,7 @@ import { UrlSearchApp } from "@/components/search/url-search-app";
 import { KanbanBoard } from "@/components/github/kanban-board";
 import { RecruiterDashboard } from "@/components/github/recruiter-dashboard";
 import { MetaSearch } from "@/components/github/meta-search";
+import { CompareCandidates } from "@/components/github/compare-candidates";
 
 export default function Home() {
   const activeApp = useUIStore((s) => s.activeApp);
@@ -60,5 +61,6 @@ export default function Home() {
   if (activeApp === "kanban") return <KanbanBoard />;
   if (activeApp === "dashboard") return <RecruiterDashboard />;
   if (activeApp === "metasearch") return <MetaSearch />;
+  if (activeApp === "compare") return <CompareCandidates />;
   return <Launcher />;
 }

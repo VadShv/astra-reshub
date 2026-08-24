@@ -50,7 +50,8 @@ export type AppId =
   | "dreamjob"
   | "kanban"
   | "dashboard"
-  | "metasearch";
+  | "metasearch"
+  | "compare";
 
 interface UIStore {
   // Which search system / view is active.

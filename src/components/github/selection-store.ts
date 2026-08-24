@@ -42,6 +42,12 @@ export interface Candidate {
   enriched: boolean;
 }
 
+interface DuplicateMatch {
+  candidate: Candidate;
+  reason: string;
+  confidence: "high" | "medium" | "low";
+}
+
 interface SelectionStore {
   candidates: Candidate[];
   addCandidate: (c: Candidate) => void;
@@ -52,6 +58,8 @@ interface SelectionStore {
   setStatus: (login: string, status: CandidateStatus) => void;
   setNote: (login: string, note: string) => void;
   setPosition: (login: string, position: string) => void;
+  findDuplicates: (c: Candidate) => DuplicateMatch[];
+  mergeCandidates: (keepLogin: string, mergeLogin: string) => void;
 }
 
 export const useSelectionStore = create<SelectionStore>()(
@@ -91,6 +99,56 @@ export const useSelectionStore = create<SelectionStore>()(
             x.login === login ? { ...x, position } : x
           ),
         })),
+      findDuplicates: (c) => {
+        const existing = get().candidates;
+        const matches: DuplicateMatch[] = [];
+        const normName = (c.name || "").trim().toLowerCase();
+        const cEmail = (c.email || "").trim().toLowerCase();
+
+        for (const ex of existing) {
+          if (ex.login === c.login) continue;
+          const exName = (ex.name || "").trim().toLowerCase();
+          const exEmail = (ex.email || "").trim().toLowerCase();
+
+          if (cEmail && exEmail && cEmail === exEmail) {
+            matches.push({ candidate: ex, reason: "Совпадение email", confidence: "high" });
+            continue;
+          }
+          if (normName && exName && normName === exName && normName.length > 3) {
+            matches.push({ candidate: ex, reason: "Совпадение имени", confidence: "medium" });
+            continue;
+          }
+          if (normName && ex.bio && ex.bio.toLowerCase().includes(normName) && normName.length > 5) {
+            matches.push({ candidate: ex, reason: "Имя найдено в bio", confidence: "low" });
+          }
+        }
+        return matches;
+      },
+      mergeCandidates: (keepLogin, mergeLogin) =>
+        set((s) => {
+          const keep = s.candidates.find((x) => x.login === keepLogin);
+          const merge = s.candidates.find((x) => x.login === mergeLogin);
+          if (!keep || !merge) return s;
+          const merged: Candidate = {
+            ...keep,
+            name: keep.name || merge.name,
+            bio: keep.bio || merge.bio,
+            company: keep.company || merge.company,
+            email: keep.email || merge.email,
+            location: keep.location || merge.location,
+            blog: keep.blog || merge.blog,
+            twitter_username: keep.twitter_username || merge.twitter_username,
+            note: [keep.note, merge.note].filter(Boolean).join(" | ") || undefined,
+            tags: [...new Set([...(keep.tags || []), ...(merge.tags || [])])],
+            position: keep.position || merge.position,
+            enriched: keep.enriched || merge.enriched,
+          };
+          return {
+            candidates: s.candidates
+              .filter((x) => x.login !== mergeLogin)
+              .map((x) => (x.login === keepLogin ? merged : x)),
+          };
+        }),
     }),
     { name: "gitfind-selection-v1" }
   )

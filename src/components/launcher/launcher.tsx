@@ -26,6 +26,7 @@ import {
   Crown,
   LayoutGrid,
   BarChart3,
+  GitCompare,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -42,6 +43,7 @@ import { ExtensionsSection } from "./extensions-section";
 import { SuggestToolDialog } from "./suggest-tool-dialog";
 import { SuggestedToolsSection } from "./suggested-tools-section";
 import { SocialNetworksSection } from "./social-networks-section";
+import { OnboardingDialog } from "./onboarding-dialog";
 
 interface SystemCard {
   id: AppId;
@@ -877,6 +879,13 @@ export function Launcher() {
                   <BarChart3 className="h-3.5 w-3.5 text-emerald-500" />
                   <span className="hidden md:inline">Дашборд</span>
                 </button>
+                <button
+                  onClick={() => setApp("compare")}
+                  className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
+                >
+                  <GitCompare className="h-3.5 w-3.5 text-violet-500" />
+                  <span className="hidden md:inline">Сравнить</span>
+                </button>
               </>
             )}
             <button
@@ -915,6 +924,8 @@ export function Launcher() {
       </header>
 
       <SuggestToolDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
+
+      <OnboardingDialog />
 
       {/* Main */}
       <main className="flex-1">
