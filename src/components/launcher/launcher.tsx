@@ -23,6 +23,7 @@ import {
   Plus,
   Book,
   X,
+  Crown,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -813,21 +814,26 @@ export function Launcher() {
   const selectionCount = useSelectionStore((s) => s.candidates.length);
   const [suggestOpen, setSuggestOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [paidOnly, setPaidOnly] = React.useState(false);
+
+  const PAID_CARD_IDS = new Set(["hh", "habr"]);
 
   const featured = SYSTEMS.find((s) => s.featured)!;
   const rest = SYSTEMS.filter((s) => !s.featured);
 
   const isSearching = searchQuery.trim().length > 0;
   const filteredRest = React.useMemo(() => {
-    if (!isSearching) return rest;
+    let list = rest;
+    if (paidOnly) list = list.filter((s) => PAID_CARD_IDS.has(s.id));
+    if (!isSearching) return list;
     const q = searchQuery.toLowerCase();
-    return rest.filter(
+    return list.filter(
       (s) =>
         s.name.toLowerCase().includes(q) ||
         s.tagline.toLowerCase().includes(q) ||
         s.description.toLowerCase().includes(q)
     );
-  }, [searchQuery, rest]);
+  }, [searchQuery, rest, paidOnly]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -846,6 +852,17 @@ export function Launcher() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPaidOnly((v) => !v)}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all ${
+                paidOnly
+                  ? "bg-amber-500 text-white border-amber-500 shadow-sm"
+                  : "bg-card hover:shadow-sm"
+              }`}
+            >
+              <Crown className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Платные</span>
+            </button>
             <button
               onClick={() => setSuggestOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm hover:shadow-sm transition-all"
@@ -901,8 +918,16 @@ export function Launcher() {
             </div>
           )}
 
+          {paidOnly && !isSearching && (
+            <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-sm">
+              <Crown className="h-4 w-4 text-amber-500" />
+              <span className="text-foreground font-medium">Платные источники</span>
+              <span className="text-muted-foreground">— HH, Хабр Карьера, HUNT share, Podbor.io</span>
+            </div>
+          )}
+
           {/* Hero */}
-          {!isSearching && (
+          {!isSearching && !paidOnly && (
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -924,7 +949,7 @@ export function Launcher() {
           )}
 
           {/* Featured system (CSE) */}
-          {!isSearching && (
+          {!isSearching && !paidOnly && (
           <div className="mb-5">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2.5">
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
@@ -1016,7 +1041,7 @@ export function Launcher() {
           </div>
 
           {/* Quick presets preview */}
-          {!isSearching && (
+          {!isSearching && !paidOnly && (
           <>
           <div className="mt-10">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3 justify-center">
@@ -1090,6 +1115,13 @@ export function Launcher() {
           {/* Suggested tools — user-submitted tools */}
           <SuggestedToolsSection />
           </>
+          )}
+
+          {/* Paid-only mode: show just paid aggregators */}
+          {paidOnly && !isSearching && (
+            <div className="mt-6">
+              <CandidateAggregatorsSection paidOnly />
+            </div>
           )}
         </div>
       </main>

@@ -82,18 +82,24 @@ const AGGREGATORS: CandidateAggregator[] = [
   },
 ];
 
-export function CandidateAggregatorsSection() {
+export function CandidateAggregatorsSection({ paidOnly = false }: { paidOnly?: boolean }) {
+  const PAID_IDS = new Set(["podbor", "huntshare"]);
+  const aggregators = paidOnly
+    ? AGGREGATORS.filter((a) => PAID_IDS.has(a.id))
+    : AGGREGATORS;
+
   return (
     <CollapsibleSection
       icon={<UserCheck className="h-5 w-5" />}
       iconAccent="from-fuchsia-500 to-purple-600"
-      title="Агрегаторы кандидатов"
-      subtitle="Платформы, собирающие профили кандидатов из множества источников и шеринг-базы рекрутеров"
-      count={AGGREGATORS.length}
+      title={paidOnly ? "Платные инструменты" : "Агрегаторы кандидатов"}
+      subtitle={paidOnly ? "Платные источники и инструменты для сорсинга" : "Платформы, собирающие профили кандидатов из множества источников и шеринг-базы рекрутеров"}
+      count={aggregators.length}
+      defaultOpen={paidOnly}
     >
       {/* Aggregators grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {AGGREGATORS.map((agg) => (
+        {aggregators.map((agg) => (
           <CandidateAggregatorBlock key={agg.id} agg={agg} />
         ))}
       </div>
