@@ -1,13 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft, GripVertical } from "lucide-react";
+import { ArrowLeft, GripVertical, AlertTriangle } from "lucide-react";
 import {
   useSelectionStore,
   Candidate,
   CandidateStatus,
   STATUS_LABELS,
   STATUS_COLORS,
+  isStale,
+  staleDays,
 } from "./selection-store";
 import { useUIStore } from "./ui-store";
 
@@ -142,8 +144,9 @@ export function KanbanBoard() {
                             )}
                           </div>
                           {c.statusChangedAt && (
-                            <div className="text-[10px] text-muted-foreground mt-1">
-                              {timeAgo(c.statusChangedAt)}
+                            <div className={`text-[10px] mt-1 ${isStale(c) ? "text-amber-500 font-medium" : "text-muted-foreground"}`}>
+                              {isStale(c) && <AlertTriangle className="h-2.5 w-2.5 inline mr-0.5" />}
+                              {isStale(c) ? `Завис ${staleDays(c)} дн` : timeAgo(c.statusChangedAt)}
                             </div>
                           )}
                         </div>

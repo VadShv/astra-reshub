@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Copy, Check, MessageSquare } from "lucide-react";
+import { Copy, Check, MessageSquare, Send } from "lucide-react";
 import { Candidate } from "./selection-store";
 import { toast } from "sonner";
 
@@ -130,13 +130,24 @@ export function OutreachGenerator({ candidate }: OutreachGeneratorProps) {
         />
       </div>
 
-      <button
-        onClick={copy}
-        className="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm hover:opacity-90 transition-opacity w-full justify-center"
-      >
-        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-        {copied ? "Скопировано!" : "Копировать"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={copy}
+          className="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm hover:opacity-90 transition-opacity flex-1 justify-center"
+        >
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied ? "Скопировано!" : "Копировать"}
+        </button>
+        {candidate.email && (
+          <a
+            href={`mailto:${candidate.email}?subject=${encodeURIComponent("Вакансия — системный разработчик")}&body=${encodeURIComponent(text)}`}
+            className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2 text-sm hover:shadow-sm transition-all flex-1 justify-center"
+          >
+            <Send className="h-4 w-4 text-primary" />
+            Отправить
+          </a>
+        )}
+      </div>
     </div>
   );
 }

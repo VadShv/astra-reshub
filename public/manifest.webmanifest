@@ -1,0 +1,17 @@
+{
+  "name": "SourcerHub — Сорсинг системных инженеров",
+  "short_name": "SourcerHub",
+  "description": "44 поисковые системы для рекрутера: GitHub, LinkedIn, hh.ru, Хабр, VK, Telegram и др.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

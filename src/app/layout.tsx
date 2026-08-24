@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GitFind — Поиск системных разработчиков по GitHub",
+  title: "SourcerHub — Сорсинг системных инженеров",
   description:
-    "Поиск системных разработчиков (C, C++, Go, Python, Rust) в Москве и России: СУБД, Linux, СХД, СРК, ядро и сетевое ПО. Экспорт выборки в формат ХАНТ.",
+    "44 поисковые системы для рекрутера: GitHub, LinkedIn, hh.ru, Хабр, VK, Telegram, Yandex, Bing и др. Единая выборка и экспорт в ХАНТ.",
   keywords: [
     "GitHub",
     "системные разработчики",
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
     "Rust",
     "СУБД",
     "Linux",
-    "СХД",
-    "СРК",
     "Москва",
     "Россия",
     "рекрутинг",
+    "сорсинг",
   ],
   icons: {
     icon: "/logo.svg",
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({

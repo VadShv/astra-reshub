@@ -27,6 +27,7 @@ import {
   LayoutGrid,
   BarChart3,
   GitCompare,
+  Keyboard,
 } from "lucide-react";
 import { useUIStore, AppId } from "@/components/github/ui-store";
 import { useSelectionStore } from "@/components/github/selection-store";
@@ -44,6 +45,7 @@ import { SuggestToolDialog } from "./suggest-tool-dialog";
 import { SuggestedToolsSection } from "./suggested-tools-section";
 import { SocialNetworksSection } from "./social-networks-section";
 import { OnboardingDialog } from "./onboarding-dialog";
+import { useHotkeys, HOTKEY_HINTS } from "@/components/github/use-hotkeys";
 
 interface SystemCard {
   id: AppId;
@@ -819,6 +821,9 @@ export function Launcher() {
   const [suggestOpen, setSuggestOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [paidOnly, setPaidOnly] = React.useState(false);
+  const [showHotkeys, setShowHotkeys] = React.useState(false);
+
+  useHotkeys();
 
   const PAID_CARD_IDS = new Set(["hh", "habr"]);
 
@@ -907,6 +912,13 @@ export function Launcher() {
               <span className="hidden sm:inline">Предложить</span>
             </button>
             <ThemeToggle />
+            <button
+              onClick={() => setShowHotkeys((v) => !v)}
+              className="inline-flex items-center justify-center rounded-full border bg-card h-8 w-8 hover:shadow-sm transition-all"
+              title="Горячие клавиши"
+            >
+              <Keyboard className="h-3.5 w-3.5" />
+            </button>
             {selectionCount > 0 && (
               <button
                 onClick={() => setApp("gitfind")}
@@ -926,6 +938,25 @@ export function Launcher() {
       <SuggestToolDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
 
       <OnboardingDialog />
+
+      {showHotkeys && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowHotkeys(false)}>
+          <div className="max-w-sm w-full rounded-2xl border bg-card p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-bold text-sm mb-3">Горячие клавиши</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {HOTKEY_HINTS.map((h) => (
+                <div key={h.key} className="flex items-center gap-2 text-xs">
+                  <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-semibold">{h.key}</kbd>
+                  <span className="text-muted-foreground">{h.label}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setShowHotkeys(false)} className="mt-4 w-full rounded-lg bg-primary text-primary-foreground py-2 text-sm hover:opacity-90">
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main */}
       <main className="flex-1">

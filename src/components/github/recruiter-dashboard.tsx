@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { ArrowLeft, Users, Mail, MapPin, TrendingUp, Clock } from "lucide-react";
-import { useSelectionStore, Candidate, CandidateStatus, STATUS_LABELS, STATUS_COLORS } from "./selection-store";
+import { ArrowLeft, Users, Mail, MapPin, TrendingUp, Clock, AlertTriangle } from "lucide-react";
+import { useSelectionStore, Candidate, CandidateStatus, STATUS_LABELS, STATUS_COLORS, isStale, staleDays } from "./selection-store";
 import { useUIStore } from "./ui-store";
 
 const STATUSES: CandidateStatus[] = ["new", "reviewed", "contacted", "replied", "interested", "rejected"];
@@ -121,26 +121,63 @@ export function RecruiterDashboard() {
               </div>
             </div>
 
-            {/* Source effectiveness */}
+            {/* Source effectiveness with conversion */}
             <div className="rounded-xl border bg-card p-5">
               <h2 className="font-semibold text-sm mb-4">Эффективность источников</h2>
               <div className="space-y-2.5">
                 {Object.entries(stats.bySource)
                   .sort((a, b) => b[1] - a[1])
-                  .map(([source, count]) => (
-                    <div key={source} className="flex items-center gap-3">
-                      <span className="text-xs font-medium w-24 truncate">{source}</span>
-                      <div className="flex-1 h-6 rounded-md bg-muted overflow-hidden">
-                        <div
-                          className={`h-full ${sourceColors[source] || "bg-slate-500"} transition-all`}
-                          style={{ width: `${(count / maxSource) * 100}%` }}
-                        />
+                  .map(([source, count]) => {
+                    const srcCandidates = candidates.filter((c) => getSource(c) === source);
+                    const srcContacted = srcCandidates.filter((c) =>
+                      ["contacted", "replied", "interested"].includes(c.status)
+                    ).length;
+                    const convRate = count > 0 ? Math.round((srcContacted / count) * 100) : 0;
+                    return (
+                      <div key={source} className="flex items-center gap-3">
+                        <span className="text-xs font-medium w-24 truncate">{source}</span>
+                        <div className="flex-1 h-6 rounded-md bg-muted overflow-hidden">
+                          <div
+                            className={`h-full ${sourceColors[source] || "bg-slate-500"} transition-all`}
+                            style={{ width: `${(count / maxSource) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold w-8 text-right">{count}</span>
+                        <span className={`text-xs w-12 text-right font-medium ${convRate >= 40 ? "text-emerald-500" : convRate >= 20 ? "text-amber-500" : "text-muted-foreground"}`}>
+                          {convRate}%
+                        </span>
                       </div>
-                      <span className="text-sm font-semibold w-8 text-right">{count}</span>
+                    );
+                  })}
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-2">% — конверсия в &quot;Связались+&quot;</div>
+            </div>
+
+            {/* Stale candidates — need attention */}
+            {candidates.filter(isStale).length > 0 && (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+                <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                  <AlertTriangle className="h-4 w-4" />
+                  Требуют внимания ({candidates.filter(isStale).length})
+                </h2>
+                <div className="space-y-1.5">
+                  {candidates.filter(isStale).map((c) => (
+                    <div key={c.login} className="flex items-center gap-3 py-1">
+                      {c.avatar_url && <img src={c.avatar_url} alt="" className="h-6 w-6 rounded-full" />}
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium truncate">{c.name || c.login}</span>
+                      </div>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${STATUS_COLORS[c.status]}`}>
+                        {STATUS_LABELS[c.status]}
+                      </span>
+                      <span className="text-[11px] text-amber-500 font-medium w-20 text-right">
+                        {staleDays(c)} дн
+                      </span>
                     </div>
                   ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Recent activity */}
             <div className="rounded-xl border bg-card p-5">

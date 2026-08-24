@@ -11,14 +11,18 @@ export type CandidateStatus =
   | "interested"
   | "rejected";
 
+export interface ActivityEntry {
+  ts: number;
+  action: string;
+  detail?: string;
+}
+
 export interface Candidate {
-  // Core identity (from search results)
   login: string;
   id: number;
   avatar_url: string;
   html_url: string;
   type?: string;
-  // Enriched profile fields (fetched on add)
   name?: string | null;
   bio?: string | null;
   company?: string | null;
@@ -32,12 +36,13 @@ export interface Candidate {
   public_gists?: number;
   created_at?: string;
   updated_at?: string;
-  // Recruiter metadata
   note?: string;
   status: CandidateStatus;
   statusChangedAt?: number;
-  position?: string; // desired/target position (recruiter fills)
+  position?: string;
   tags?: string[];
+  rating?: number;
+  activityLog?: ActivityEntry[];
   addedAt: number;
   enriched: boolean;
 }
@@ -46,6 +51,20 @@ interface DuplicateMatch {
   candidate: Candidate;
   reason: string;
   confidence: "high" | "medium" | "low";
+}
+
+const STALE_DAYS = 7;
+const DAY_MS = 86400000;
+
+export function isStale(c: Candidate): boolean {
+  if (!c.statusChangedAt) return false;
+  if (c.status === "new" || c.status === "rejected") return false;
+  return Date.now() - c.statusChangedAt > STALE_DAYS * DAY_MS;
+}
+
+export function staleDays(c: Candidate): number {
+  if (!c.statusChangedAt) return 0;
+  return Math.floor((Date.now() - c.statusChangedAt) / DAY_MS);
 }
 
 interface SelectionStore {
@@ -58,8 +77,19 @@ interface SelectionStore {
   setStatus: (login: string, status: CandidateStatus) => void;
   setNote: (login: string, note: string) => void;
   setPosition: (login: string, position: string) => void;
+  setRating: (login: string, rating: number) => void;
+  addTag: (login: string, tag: string) => void;
+  removeTag: (login: string, tag: string) => void;
+  bulkSetStatus: (logins: string[], status: CandidateStatus) => void;
+  bulkAddTag: (logins: string[], tag: string) => void;
+  bulkRemove: (logins: string[]) => void;
   findDuplicates: (c: Candidate) => DuplicateMatch[];
   mergeCandidates: (keepLogin: string, mergeLogin: string) => void;
+}
+
+function logActivity(c: Candidate, action: string, detail?: string): ActivityEntry[] {
+  const entry: ActivityEntry = { ts: Date.now(), action, detail };
+  return [entry, ...(c.activityLog || [])].slice(0, 50);
 }
 
 export const useSelectionStore = create<SelectionStore>()(
@@ -69,7 +99,7 @@ export const useSelectionStore = create<SelectionStore>()(
       addCandidate: (c) =>
         set((s) => {
           if (s.candidates.some((x) => x.login === c.login)) return s;
-          return { candidates: [c, ...s.candidates] };
+          return { candidates: [{ ...c, activityLog: logActivity(c, "Добавлен в выборку") }, ...s.candidates] };
         }),
       removeCandidate: (login) =>
         set((s) => ({ candidates: s.candidates.filter((x) => x.login !== login) })),
@@ -84,13 +114,15 @@ export const useSelectionStore = create<SelectionStore>()(
       setStatus: (login, status) =>
         set((s) => ({
           candidates: s.candidates.map((x) =>
-            x.login === login ? { ...x, status, statusChangedAt: Date.now() } : x
+            x.login === login
+              ? { ...x, status, statusChangedAt: Date.now(), activityLog: logActivity(x, "Статус", `${x.status} → ${status}`) }
+              : x
           ),
         })),
       setNote: (login, note) =>
         set((s) => ({
           candidates: s.candidates.map((x) =>
-            x.login === login ? { ...x, note } : x
+            x.login === login ? { ...x, note, activityLog: logActivity(x, "Заметка обновлена") } : x
           ),
         })),
       setPosition: (login, position) =>
@@ -99,17 +131,55 @@ export const useSelectionStore = create<SelectionStore>()(
             x.login === login ? { ...x, position } : x
           ),
         })),
+      setRating: (login, rating) =>
+        set((s) => ({
+          candidates: s.candidates.map((x) =>
+            x.login === login ? { ...x, rating, activityLog: logActivity(x, "Рейтинг", `${rating}★`) } : x
+          ),
+        })),
+      addTag: (login, tag) =>
+        set((s) => ({
+          candidates: s.candidates.map((x) =>
+            x.login === login
+              ? { ...x, tags: [...new Set([...(x.tags || []), tag])] }
+              : x
+          ),
+        })),
+      removeTag: (login, tag) =>
+        set((s) => ({
+          candidates: s.candidates.map((x) =>
+            x.login === login
+              ? { ...x, tags: (x.tags || []).filter((t) => t !== tag) }
+              : x
+          ),
+        })),
+      bulkSetStatus: (logins, status) =>
+        set((s) => ({
+          candidates: s.candidates.map((x) =>
+            logins.includes(x.login)
+              ? { ...x, status, statusChangedAt: Date.now(), activityLog: logActivity(x, "Bulk статус", `${x.status} → ${status}`) }
+              : x
+          ),
+        })),
+      bulkAddTag: (logins, tag) =>
+        set((s) => ({
+          candidates: s.candidates.map((x) =>
+            logins.includes(x.login)
+              ? { ...x, tags: [...new Set([...(x.tags || []), tag])] }
+              : x
+          ),
+        })),
+      bulkRemove: (logins) =>
+        set((s) => ({ candidates: s.candidates.filter((x) => !logins.includes(x.login)) })),
       findDuplicates: (c) => {
         const existing = get().candidates;
         const matches: DuplicateMatch[] = [];
         const normName = (c.name || "").trim().toLowerCase();
         const cEmail = (c.email || "").trim().toLowerCase();
-
         for (const ex of existing) {
           if (ex.login === c.login) continue;
           const exName = (ex.name || "").trim().toLowerCase();
           const exEmail = (ex.email || "").trim().toLowerCase();
-
           if (cEmail && exEmail && cEmail === exEmail) {
             matches.push({ candidate: ex, reason: "Совпадение email", confidence: "high" });
             continue;
@@ -141,7 +211,9 @@ export const useSelectionStore = create<SelectionStore>()(
             note: [keep.note, merge.note].filter(Boolean).join(" | ") || undefined,
             tags: [...new Set([...(keep.tags || []), ...(merge.tags || [])])],
             position: keep.position || merge.position,
+            rating: Math.max(keep.rating || 0, merge.rating || 0) || undefined,
             enriched: keep.enriched || merge.enriched,
+            activityLog: logActivity(keep, "Объединён", `с ${merge.login}`),
           };
           return {
             candidates: s.candidates
