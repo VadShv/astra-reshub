@@ -612,6 +612,60 @@ const SYSTEMS: SystemCard[] = [
       { label: "Профиль", value: "URL-билдер" },
     ],
   },
+  {
+    id: "yandex",
+    name: "Yandex",
+    tagline: "yandex.ru · x-ray для РФ",
+    description:
+      "Яндекс — крупнейший российский поисковик. Другой индекс: находит профили VK, Хабр, hh.ru, которые Google не индексирует.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-red-500 to-yellow-500",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "X-ray: site: + исключения" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: ВК, Хабр, hh.ru, Superjob" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Yandex" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "bing",
+    name: "Bing",
+    tagline: "bing.com · x-ray Microsoft",
+    description:
+      "Bing — второй по размеру поисковик. Другой индекс: находит LinkedIn, Facebook, GitHub профили, отсутствующие в Google.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-blue-500 to-teal-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "X-ray: site: + исключения" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: LinkedIn, GitHub, SO, PDF" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "Bing" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
+  {
+    id: "ddg",
+    name: "DuckDuckGo",
+    tagline: "duckduckgo.com · приватный x-ray",
+    description:
+      "DuckDuckGo — приватный поисковик без трекинга. X-ray сорсинг без следов. Операторы site: и исключения.",
+    icon: <Globe className="h-7 w-7" />,
+    accent: "from-orange-500 to-red-600",
+    features: [
+      { icon: <Search className="h-4 w-4" />, text: "Приватный x-ray: site: + исключения" },
+      { icon: <Star className="h-4 w-4" />, text: "Пресеты: LinkedIn, GitHub, Хабр, резюме" },
+      { icon: <ClipboardList className="h-4 w-4" />, text: "Ручное добавление → экспорт в ХАНТ" },
+    ],
+    stats: [
+      { label: "Источник", value: "DuckDuckGo" },
+      { label: "Профиль", value: "URL-билдер" },
+    ],
+  },
 ];
 
 export function Launcher() {
@@ -712,7 +766,7 @@ export function Launcher() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-3 py-1 text-xs text-muted-foreground mb-5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              31 поисковая система в одном месте
+              34 поисковые системы в одном месте
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight">
               Сорсинг{" "}

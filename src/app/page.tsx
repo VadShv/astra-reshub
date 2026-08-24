@@ -41,5 +41,8 @@ export default function Home() {
   if (activeApp === "medium") return <UrlSearchApp systemId="medium" />;
   if (activeApp === "vk") return <UrlSearchApp systemId="vk" />;
   if (activeApp === "facebook") return <UrlSearchApp systemId="facebook" />;
+  if (activeApp === "yandex") return <UrlSearchApp systemId="yandex" />;
+  if (activeApp === "bing") return <UrlSearchApp systemId="bing" />;
+  if (activeApp === "ddg") return <UrlSearchApp systemId="ddg" />;
   return <Launcher />;
 }

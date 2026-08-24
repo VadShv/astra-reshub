@@ -830,6 +830,12 @@ function getPlaceholder(systemId: UrlSystemId): string {
       return "Например: C++ разработчик, Go, Python";
     case "facebook":
       return "Например: C++ developer, Go, Python";
+    case "yandex":
+      return 'Например: "C++ разработчик"';
+    case "bing":
+      return 'Например: "C++ developer" Russia';
+    case "ddg":
+      return 'Например: "C++ developer"';
     default:
       return "Введите запрос...";
   }
@@ -895,6 +901,12 @@ function getHint(systemId: UrlSystemId): string {
       return "Google x-ray по ВКонтакте (site:vk.com). Профили и группы разработчиков добавляйте в выборку.";
     case "facebook":
       return "Google x-ray по Facebook (site:facebook.com). Профили разработчиков добавляйте в выборку.";
+    case "yandex":
+      return "X-ray через Яндекс — другой индекс, находит VK/Хабр/hh.ru профили, отсутствующие в Google. Результаты добавляйте в выборку.";
+    case "bing":
+      return "X-ray через Bing — другой индекс, находит LinkedIn/GitHub/Facebook профили. Результаты добавляйте в выборку.";
+    case "ddg":
+      return "Приватный x-ray через DuckDuckGo (без трекинга). Профили разработчиков добавляйте в выборку.";
     default:
       return "Откройте ссылку в браузере и добавляйте кандидатов в выборку.";
   }

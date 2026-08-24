@@ -34,7 +34,10 @@ export type AppId =
   | "leetcode"
   | "medium"
   | "vk"
-  | "facebook";
+  | "facebook"
+  | "yandex"
+  | "bing"
+  | "ddg";
 
 interface UIStore {
   // Which search system / view is active.

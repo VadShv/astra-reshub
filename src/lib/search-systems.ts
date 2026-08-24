@@ -91,7 +91,10 @@ export type UrlSystemId =
   | "leetcode"
   | "medium"
   | "vk"
-  | "facebook";
+  | "facebook"
+  | "yandex"
+  | "bing"
+  | "ddg";
 
 // --------------------------------------------------------------------------
 // Helpers
@@ -1154,6 +1157,87 @@ const FB_FIELDS: FieldConfig[] = [
 ];
 
 // --------------------------------------------------------------------------
+// 30. Yandex — российский поисковик (x-ray)
+// --------------------------------------------------------------------------
+const YANDEX_PRESETS: Preset[] = [
+  { id: "ya-vk-cpp", label: "C++ ВК", hint: "site:vk.com", values: { query: '"C++ разработчик"', site: "vk.com" } },
+  { id: "ya-habr-go", label: "Go Хабр профили", hint: "site:habr.com/users", values: { query: '"Go"', site: "habr.com/users" } },
+  { id: "ya-habr-rust", label: "Rust Хабр Карьера", hint: "site:career.habr.com/resumes", values: { query: '"Rust разработчик"', site: "career.habr.com/resumes" } },
+  { id: "ya-hh-python", label: "Python hh.ru", hint: "site:hh.ru/resume", values: { query: '"Python разработчик"', site: "hh.ru/resume" } },
+  { id: "ya-sj-cpp", label: "C++ Superjob", hint: "site:superjob.ru/resume", values: { query: '"C++"', site: "superjob.ru/resume" } },
+];
+
+function buildYandexUrl(v: Record<string, any>): string {
+  const tokens: string[] = [];
+  if (v.site?.trim()) tokens.push(`site:${v.site.trim()}`);
+  if (v.query?.trim()) tokens.push(v.query.trim());
+  if (v.exclude?.trim()) {
+    v.exclude.split(/\s+/).filter(Boolean).forEach((t: string) => tokens.push(`-${t}`));
+  }
+  return `https://yandex.ru/search/?text=${encodeURIComponent(tokens.join(" "))}`;
+}
+
+const YANDEX_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ разработчик", Go, Rust...' },
+  { key: "site", label: "Сайт (site:)", type: "text", placeholder: "vk.com, habr.com, hh.ru..." },
+  { key: "exclude", label: "Исключить (-)", type: "text", placeholder: "вакансии jobs" },
+];
+
+// --------------------------------------------------------------------------
+// 31. Bing — поисковик Microsoft (x-ray)
+// --------------------------------------------------------------------------
+const BING_PRESETS: Preset[] = [
+  { id: "bing-li-cpp", label: "C++ LinkedIn", hint: "site:linkedin.com/in", values: { query: '"C++ developer" Russia', site: "linkedin.com/in" } },
+  { id: "bing-gh-go", label: "Go GitHub", hint: "site:github.com", values: { query: '"Go developer"', site: "github.com" } },
+  { id: "bing-fb-rust", label: "Rust Facebook", hint: "site:facebook.com", values: { query: '"Rust developer"', site: "facebook.com" } },
+  { id: "bing-so-python", label: "Python StackOverflow", hint: "site:stackoverflow.com/users", values: { query: '"Python"', site: "stackoverflow.com/users" } },
+  { id: "bing-pdf-cpp", label: "C++ резюме PDF", hint: "filetype:pdf", values: { query: '"C++ developer" resume filetype:pdf' } },
+];
+
+function buildBingUrl(v: Record<string, any>): string {
+  const tokens: string[] = [];
+  if (v.site?.trim()) tokens.push(`site:${v.site.trim()}`);
+  if (v.query?.trim()) tokens.push(v.query.trim());
+  if (v.exclude?.trim()) {
+    v.exclude.split(/\s+/).filter(Boolean).forEach((t: string) => tokens.push(`-${t}`));
+  }
+  return `https://www.bing.com/search?q=${encodeURIComponent(tokens.join(" "))}`;
+}
+
+const BING_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ developer", Go, Rust...' },
+  { key: "site", label: "Сайт (site:)", type: "text", placeholder: "linkedin.com, github.com..." },
+  { key: "exclude", label: "Исключить (-)", type: "text", placeholder: "jobs вакансии" },
+];
+
+// --------------------------------------------------------------------------
+// 32. DuckDuckGo — приватный поисковик (x-ray)
+// --------------------------------------------------------------------------
+const DDG_PRESETS: Preset[] = [
+  { id: "ddg-li-cpp", label: "C++ LinkedIn", hint: "site:linkedin.com/in", values: { query: '"C++ developer"', site: "linkedin.com/in" } },
+  { id: "ddg-gh-go", label: "Go GitHub", hint: "site:github.com", values: { query: '"Go developer"', site: "github.com" } },
+  { id: "ddg-habr-rust", label: "Rust Хабр", hint: "site:habr.com", values: { query: '"Rust"', site: "habr.com" } },
+  { id: "ddg-python-resume", label: "Python резюме", hint: "без site:", values: { query: '"Python developer" resume' } },
+  { id: "ddg-devops-li", label: "DevOps LinkedIn", hint: "site:linkedin.com/in", values: { query: '"DevOps engineer"', site: "linkedin.com/in" } },
+];
+
+function buildDdgUrl(v: Record<string, any>): string {
+  const tokens: string[] = [];
+  if (v.site?.trim()) tokens.push(`site:${v.site.trim()}`);
+  if (v.query?.trim()) tokens.push(v.query.trim());
+  if (v.exclude?.trim()) {
+    v.exclude.split(/\s+/).filter(Boolean).forEach((t: string) => tokens.push(`-${t}`));
+  }
+  return `https://duckduckgo.com/?q=${encodeURIComponent(tokens.join(" "))}`;
+}
+
+const DDG_FIELDS: FieldConfig[] = [
+  { key: "query", label: "Запрос", type: "text", placeholder: '"C++ developer", Go, Rust...' },
+  { key: "site", label: "Сайт (site:)", type: "text", placeholder: "linkedin.com, github.com..." },
+  { key: "exclude", label: "Исключить (-)", type: "text", placeholder: "jobs вакансии" },
+];
+
+// --------------------------------------------------------------------------
 // Final configs map
 // --------------------------------------------------------------------------
 export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
@@ -1563,6 +1647,48 @@ export const URL_SYSTEMS: Record<UrlSystemId, UrlSystemConfig> = {
     presets: FB_PRESETS,
     buildUrl: buildFacebookUrl,
     summarize: (v) => summarizeValues(v, FB_FIELDS),
+  },
+  yandex: {
+    id: "yandex",
+    name: "Yandex",
+    tagline: "yandex.ru · x-ray для РФ",
+    description:
+      "Яндекс — крупнейший российский поисковик. Другой индекс: находит профили VK, Хабр, hh.ru, которые Google не индексирует. Операторы site: и исключения.",
+    accent: "from-red-500 to-yellow-500",
+    iconKey: "google",
+    sourceTag: "yandex",
+    fields: YANDEX_FIELDS,
+    presets: YANDEX_PRESETS,
+    buildUrl: buildYandexUrl,
+    summarize: (v) => summarizeValues(v, YANDEX_FIELDS),
+  },
+  bing: {
+    id: "bing",
+    name: "Bing",
+    tagline: "bing.com · x-ray Microsoft",
+    description:
+      "Bing — второй по размеру поисковик. Другой индекс: находит LinkedIn, Facebook, GitHub профили, отсутствующие в Google. Операторы site: и исключения.",
+    accent: "from-blue-500 to-teal-600",
+    iconKey: "google",
+    sourceTag: "bing",
+    fields: BING_FIELDS,
+    presets: BING_PRESETS,
+    buildUrl: buildBingUrl,
+    summarize: (v) => summarizeValues(v, BING_FIELDS),
+  },
+  ddg: {
+    id: "ddg",
+    name: "DuckDuckGo",
+    tagline: "duckduckgo.com · приватный x-ray",
+    description:
+      "DuckDuckGo — приватный поисковик без трекинга. X-ray сорсинг без следов. Операторы site: и исключения. Удобен для конфиденциального поиска профилей.",
+    accent: "from-orange-500 to-red-600",
+    iconKey: "google",
+    sourceTag: "ddg",
+    fields: DDG_FIELDS,
+    presets: DDG_PRESETS,
+    buildUrl: buildDdgUrl,
+    summarize: (v) => summarizeValues(v, DDG_FIELDS),
   },
 };
 
